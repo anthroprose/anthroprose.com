@@ -1,15 +1,16 @@
 {
   "name": "anthroprose",
   "description": "The base role for Anthroprose.com",
-  "chef_type": "role",
+  "instance_role": "anthroprose",
   "run_list": [
     "recipe[chef-solo-search]",
-    "recipe[users]",
+    "recipe[user::data_bag]",
     "recipe[anthroprose]",
     "recipe[openvpn]"
   ],
   "default_attributes": {
   	"region" : "us-east-1",
+	"users": ["acorley"],
     "openvpn" : {
     	"key" : {
     		"province" : "TX",
