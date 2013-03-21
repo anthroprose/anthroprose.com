@@ -1,0 +1,33 @@
+{
+  "name": "anthroprose",
+  "description": "The base role for Anthroprose.com",
+  "json_class": "Chef::Role",
+  "chef_type": "role",
+  "run_list": [
+    "recipe[user]",
+    "recipe[openvpn]"
+  ],
+  "default_attributes": {
+  	"region" : "us-east-1",
+    "openvpn" : {
+    	"key" : {
+    		"province" : "TX",
+    		"city" : "Austin",
+    		"org" : "anthroprose",
+    		"email" : "anthroprose@anthroprose.com"
+    	},
+    	"local" : "",
+    	"proto" : "udp",
+    	"port" : "54",
+    	"subnet" : "10.0.44.0",
+    	"netmask" : "255.255.255.0",
+    	"routes" : [""]
+    },
+    "authorization" : {
+    	"sudo" : {
+    		"passwordless" : true,
+    		"users" : ["ubuntu","acorley"]
+    	}
+    },
+  }
+}
