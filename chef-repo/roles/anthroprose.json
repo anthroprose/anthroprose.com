@@ -10,7 +10,8 @@
   "default_attributes": {
   	"region" : "us-east-1",
 	"users" : [
-		"acorley"
+		{ "id":"acorley" },
+		{ "id":"tgillespie" }
 	],
     "openvpn" : {
     	"key" : {
