@@ -31,7 +31,7 @@
     "authorization" : {
     	"sudo" : {
     		"passwordless" : true,
-    		"users" : ["ubuntu","acorley"]
+    		"users" : ["ubuntu", "acorley"]
     	}
     }
   }

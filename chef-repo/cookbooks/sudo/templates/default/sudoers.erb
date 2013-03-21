@@ -10,6 +10,7 @@ Defaults      env_keep+=SSH_AUTH_SOCK
 
 # User privilege specification
 root          ALL=(ALL) ALL
+ubuntu        ALL=(ALL) ALL
 
 <% @sudoers_users.each do |user| -%>
 <%= user %>   ALL=(ALL) <%= "NOPASSWD:" if @passwordless %>ALL
