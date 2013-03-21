@@ -4,7 +4,7 @@
   "chef_type": "role",
   "run_list": [
     "recipe[chef-solo-search]",
-    "recipe[user::data_bag]",
+    "recipe[anthroprose]",
     "recipe[openvpn]"
   ],
   "default_attributes": {
