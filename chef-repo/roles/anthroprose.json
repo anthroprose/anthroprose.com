@@ -1,10 +1,9 @@
 {
   "name": "anthroprose",
   "description": "The base role for Anthroprose.com",
-  "json_class": "Chef::Role",
   "chef_type": "role",
   "run_list": [
-    "recipe[user]",
+    "recipe[users]",
     "recipe[openvpn]"
   ],
   "default_attributes": {
