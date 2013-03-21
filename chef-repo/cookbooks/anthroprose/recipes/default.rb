@@ -1,23 +1,6 @@
-if node['users'] and node['users'] != '' then
-  
-  Array(node['users']).each do |u|
-    username = u['username'] || u['id']
-  
-    user_account username do
-      %w{comment uid gid home shell password system_user manage_home create_group
-          ssh_keys ssh_keygen}.each do |attr|
-        send(attr, u[attr]) if u[attr]
-      end
-      action u['action'].to_sym if u['action']
-    end
-  
-    unless u['groups'].nil?
-      u['groups'].each do |groupname|
-        group groupname do
-          members username
-          append true
-        end
-      end
-    end
-  end
+user_account 'acorley' do
+  comment       'acorley'
+  home          '/home/acorley'
+  manage_home   true
+  ssh_keys      ["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6PvSD3kbP1ymYPr58Yzt5sa248WTh+piQnHEMCP/wTxZX2iOh174UFvqOKmMReKC/V3cp+jHOFfm0ds+H9byTqWkiQFLNzAGzuZZxeBPTmnapj4mzxM9oTYtHzXnmxmtbUxjeFivsaLu7Sc16/erixlVJSKjQeEyXFPWkD8f1/9Is0sx5JpmvutMnETNhoGITKa5gIOSSJInXII8n78zq0dS9F1Q4hXIUyLC6MQdjojMRwrI4/BS/1+tjsd1+nUIoNWVOg3yT+saOuo5pOkiv1K9s8zApdV7IU5Kd0DyLfGWPKd/q4CthZDrUqBB95uAsjfkyRdI7mJ/MspMptiIcKun1JRzpfAWR2GZmfBIdvQ0plVD3qSLJL4r72ooxuUB7FQXXzsmw5WaiiiIs964OzXcf3r7WiGL5tUnLzLHKEMin99stej08o9GbnSb4zdN+22T4xLQcmhaqt1r/b7TGXPzyyVzJjxejiAQ032/ul0Ie4QawKR5DLM1FbkaGOnGUg0GLpa5fsxpNAdssbFDDTj7NTe2h4+1vtcJkZ3oUuAOThOtzyUPDxdraF12tHPtuprWS2MeA/OuwXQB4v3RJk8qLUT09VfAS5F5GDwEv717gdiEFHESn+yXAi/uAX442HVj0uG6b0SRzYKWZMvzRJ/4IauP/SBJyF8wZ0wYknQ== acorley@m0an"]
 end

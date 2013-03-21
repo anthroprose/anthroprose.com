@@ -4,13 +4,14 @@
   "chef_type": "role",
   "run_list": [
     "recipe[chef-solo-search]",
+    "recipe[user]",
     "recipe[anthroprose]",
     "recipe[openvpn]"
   ],
   "default_attributes": {
   	"region" : "us-east-1",
 	"users" : [
-		{ "id":"acorley" },
+		{ "id":"acorley", "ssh_keys":["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6PvSD3kbP1ymYPr58Yzt5sa248WTh+piQnHEMCP/wTxZX2iOh174UFvqOKmMReKC/V3cp+jHOFfm0ds+H9byTqWkiQFLNzAGzuZZxeBPTmnapj4mzxM9oTYtHzXnmxmtbUxjeFivsaLu7Sc16/erixlVJSKjQeEyXFPWkD8f1/9Is0sx5JpmvutMnETNhoGITKa5gIOSSJInXII8n78zq0dS9F1Q4hXIUyLC6MQdjojMRwrI4/BS/1+tjsd1+nUIoNWVOg3yT+saOuo5pOkiv1K9s8zApdV7IU5Kd0DyLfGWPKd/q4CthZDrUqBB95uAsjfkyRdI7mJ/MspMptiIcKun1JRzpfAWR2GZmfBIdvQ0plVD3qSLJL4r72ooxuUB7FQXXzsmw5WaiiiIs964OzXcf3r7WiGL5tUnLzLHKEMin99stej08o9GbnSb4zdN+22T4xLQcmhaqt1r/b7TGXPzyyVzJjxejiAQ032/ul0Ie4QawKR5DLM1FbkaGOnGUg0GLpa5fsxpNAdssbFDDTj7NTe2h4+1vtcJkZ3oUuAOThOtzyUPDxdraF12tHPtuprWS2MeA/OuwXQB4v3RJk8qLUT09VfAS5F5GDwEv717gdiEFHESn+yXAi/uAX442HVj0uG6b0SRzYKWZMvzRJ/4IauP/SBJyF8wZ0wYknQ== acorley@m0an"] },
 		{ "id":"tgillespie" }
 	],
     "openvpn" : {
@@ -35,3 +36,4 @@
     }
   }
 }
+
