@@ -28,6 +28,6 @@
     		"passwordless" : true,
     		"users" : ["ubuntu","acorley"]
     	}
-    },
+    }
   }
 }
