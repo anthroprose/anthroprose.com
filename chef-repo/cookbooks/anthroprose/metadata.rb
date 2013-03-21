@@ -7,3 +7,6 @@ version          "0.0.1"
 supports "ubuntu"
 
 recipe "default", "Default Recipe"
+
+depends           "user"
+depends           "openvpn"
