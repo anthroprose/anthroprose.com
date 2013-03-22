@@ -1,0 +1,10 @@
+[uwsgi]
+plugins = cgi
+socket = 127.0.0.1:<%= @port %>
+master = true
+processes = 10
+cgi = <%= @directory %>
+cgi-allowed-ext = .php
+cgi-helper = .php=php5-cgi
+cgi-timeout = 1000
+

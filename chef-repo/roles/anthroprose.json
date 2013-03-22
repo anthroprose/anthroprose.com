@@ -9,18 +9,29 @@
 		"recipe[git]",
 		"recipe[chef-solo-search]",
 		"recipe[user::data_bag]",
+		"recipe[nginx]",
+		"recipe[mysql::server]",
  		"recipe[anthroprose]",
  		"recipe[openvpn]",
 		"recipe[openvpn::users]",
-		"recipe[postfix::server]",
-		"recipe[nginx]"
+		"recipe[postfix::server]"
 	],
   	"region" : "us-east-1",
 	"users": ["acorley"],
 	"dependencies" : [
-		"git",
-		"php5-cgi",
-		"uwsgi"
+		"htop",
+		"libpcre3-dev",
+		"php5-suhosin",
+		"php5-mcrypt",
+		"php5-tidy",
+		"php5-xdebug",
+		"php5-dev",
+		"libphp5-embed",
+		"libonig-dev",
+		"libqdbm-dev",
+		"uwsgi",
+		"uwsgi-plugin-cgi",
+		"expect"
 	],
         "openvpn" : {
 		"key" : {
@@ -47,8 +58,20 @@
 		"myorigin":"anthroprose.com",
 		"mydomain":"anthroprose.com"
 	},
+	"mysql" : {
+		"bind_address" : "127.0.0.1",
+		"server_root_password" : "jDSyN3Hs8",
+		"server_debian_password" : "jDSyN3Hs8",
+		"server_repl_password" : "jDSyN3Hs8"
+	},
 	"nginx" : {
-		"default_site_enabled" : true
+		"default_site_enabled" : false,
+		"sites" : [
+			{ "domain":"mail.anthroprose.com","uwsgi_port":"2100","directory":"/opt/horde"}
+		]
+	},
+	"horde" : {
+		"directory" : "/opt/horde"
 	}
 }
 

@@ -1,0 +1,47 @@
+server {
+
+        listen 80;
+
+#        ssl                     on;
+#        ssl_certificate         /etc/nginx/server.crt;
+#        ssl_certificate_key     /etc/nginx/server.key;
+
+        server_name <%= @domain %>;
+
+        access_log /var/log/nginx/<%= @domain %>_access.log;
+        error_log /var/log/nginx/<%= @domain %>_error.log;
+
+        root <%= @directory %>;
+
+        client_max_body_size      32M;
+        send_timeout            1000s;
+        fastcgi_send_timeout    1000s;
+        fastcgi_read_timeout    1000s;
+        client_body_timeout     1000s;
+        uwsgi_connect_timeout   1000s;
+        uwsgi_send_timeout      1000s;
+        uwsgi_read_timeout      1000s;
+
+        location / {
+
+                if (-e $request_filename) { break; }
+
+                if (!-f $request_filename) {
+
+                        rewrite ^(.*) /index.php?$1 last;
+
+                }
+
+                index index.php;
+
+        }
+
+        location ~ \.php$ {
+
+                include uwsgi_params;
+                uwsgi_pass 127.0.0.1:<%= @uwsgi_port %>;
+                uwsgi_modifier1 9;
+        }
+
+}
+
