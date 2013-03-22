@@ -5,6 +5,8 @@
 	"instance_role": "anthroprose",
 	"run_list": [
 		"recipe[apt]",
+		"recipe[php]",
+		"recipe[git]",
 		"recipe[chef-solo-search]",
 		"recipe[user::data_bag]",
  		"recipe[anthroprose]",
