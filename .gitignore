@@ -17,5 +17,5 @@ tmp
 _yardoc
 doc/
 .project
-.pid
-.out
+*.pid
+*.out

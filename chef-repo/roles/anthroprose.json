@@ -1,34 +1,46 @@
 {
-  "name": "anthroprose",
-  "description": "The base role for Anthroprose.com",
-  "instance_role": "anthroprose",
-  "run_list": [
-    "recipe[chef-solo-search]",
-    "recipe[user::data_bag]",
-    "recipe[anthroprose]",
-    "recipe[openvpn]"
-  ],
+	"name": "anthroprose",
+	"hostname":"anthroprose.com",
+	"description": "The base role for Anthroprose.com",
+	"instance_role": "anthroprose",
+	"run_list": [
+		"recipe[chef-solo-search]",
+		"recipe[user::data_bag]",
+ 		"recipe[anthroprose]",
+ 		"recipe[openvpn]",
+		"recipe[openvpn::users]",
+		"recipe[postfix::server]",
+		"recipe[nginx]"
+	],
   	"region" : "us-east-1",
 	"users": ["acorley"],
-    "openvpn" : {
-    	"key" : {
-    		"province" : "TX",
-    		"city" : "Austin",
-    		"org" : "anthroprose",
-    		"email" : "anthroprose@anthroprose.com"
+        "openvpn" : {
+		"key" : {
+    			"province" : "TX",
+	    		"city" : "Austin",
+    			"org" : "anthroprose",
+    			"email" : "anthroprose@anthroprose.com"
+    	    	},
+    	    	"local" : "",
+    	    	"proto" : "udp",
+    	    	"port" : "54",
+    	    	"subnet" : "10.0.44.0",
+		"netmask" : "255.255.255.0",
+	    	"routes" : [""]
     	},
-    	"local" : "",
-    	"proto" : "udp",
-    	"port" : "54",
-    	"subnet" : "10.0.44.0",
-    	"netmask" : "255.255.255.0",
-    	"routes" : [""]
-    },
-    "authorization" : {
-    	"sudo" : {
-    		"passwordless" : true,
-    		"users" : ["ubuntu", "acorley"]
-    	}
-    }
+	"authorization" : {
+    		"sudo" : {
+    			"passwordless" : true,
+    			"users" : ["ubuntu", "acorley"]
+    		}
+    	},
+	"postfix" : {
+		"mail_relay_networks" : ["10.0.44.0/24","127.0.0.1/32"],
+		"myorigin":"anthroprose.com",
+		"mydomain":"anthroprose.com"
+	},
+	"nginx" : {
+		"default_site_enabled" : true
+	}
 }
 
