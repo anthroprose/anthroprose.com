@@ -16,6 +16,14 @@ hc = php_pear_channel "pear.horde.org" do
    action :discover
 end
 
+directory "#{node['horde']['directory']}" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
+
 script "pear_horde_role" do
   interpreter "bash"
   timeout 3600
@@ -23,7 +31,7 @@ script "pear_horde_role" do
   group "root"
   code <<-EOH
 	pear install horde/horde_role
-	expect -c "spawn pear run-scripts horde/Horde_Role;expect { \\"Filesystem\\" { send \\"#{node['horde']['directory']}\\n\\" } }"
+	echo "/opt/horde"|pear run-scripts horde/Horde_Role
   EOH
 end
 
