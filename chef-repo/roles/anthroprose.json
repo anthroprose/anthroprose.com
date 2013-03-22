@@ -8,7 +8,6 @@
     "recipe[anthroprose]",
     "recipe[openvpn]"
   ],
-  "default_attributes": {
   	"region" : "us-east-1",
 	"users": ["acorley"],
     "openvpn" : {
@@ -31,6 +30,5 @@
     		"users" : ["ubuntu", "acorley"]
     	}
     }
-  }
 }
 
