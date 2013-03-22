@@ -31,7 +31,7 @@ script "pear_horde_role" do
   group "root"
   code <<-EOH
 	pear install horde/horde_role
-	echo "/opt/horde"|pear run-scripts horde/Horde_Role
+	echo "#{node['horde']['directory']}"|pear run-scripts horde/Horde_Role
   EOH
 end
 
