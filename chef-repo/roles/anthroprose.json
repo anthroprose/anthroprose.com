@@ -4,6 +4,7 @@
 	"description": "The base role for Anthroprose.com",
 	"instance_role": "anthroprose",
 	"run_list": [
+		"recipe[apt]",
 		"recipe[chef-solo-search]",
 		"recipe[user::data_bag]",
  		"recipe[anthroprose]",
@@ -14,6 +15,11 @@
 	],
   	"region" : "us-east-1",
 	"users": ["acorley"],
+	"dependencies" : [
+		"git",
+		"php5-cgi",
+		"uwsgi"
+	],
         "openvpn" : {
 		"key" : {
     			"province" : "TX",
