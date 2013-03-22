@@ -37,13 +37,24 @@ end
 
 php_pear "webmail" do
    channel hc.channel_name
-   preferred_state "beta"
+   preferred_state "stable"
    action :install
 end
 
 service "uwsgi" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
+end
+
+script "create_databases" do
+  interpreter "bash"
+  timeout 3600
+  user "root"
+  group "root"
+  code <<-EOH
+    /usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['wordpress']['db']['database']}
+    /usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['horde']['db']['database']}
+  EOH
 end
 
 require 'digest/sha1'
@@ -76,23 +87,6 @@ execute "mysql-install-wp-privileges" do
   action :nothing
 end
 
-execute "create #{node['wordpress']['db']['database']} database" do
-  command "/usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['wordpress']['db']['database']}"
-  not_if do
-    # Make sure gem is detected if it was just installed earlier in this recipe
-    require 'rubygems'
-    Gem.clear_paths
-    require 'mysql'
-    m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
-    m.list_dbs.include?(node['wordpress']['db']['database'])
-  end
-  notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
-end
-
-log "Navigate to 'http://#{server_fqdn}/wp-admin/install.php' to complete wordpress installation" do
-  action :nothing
-end
-
 template "#{node['mysql']['conf_dir']}/wp-grants.sql" do
   source "grants.sql.erb"
   owner "root"
@@ -104,6 +98,18 @@ template "#{node['mysql']['conf_dir']}/wp-grants.sql" do
     :database => node['wordpress']['db']['database']
   )
   notifies :run, "execute[mysql-install-wp-privileges]", :immediately
+end
+
+template "#{node['horde']['directory']}/config/conf.php" do
+  source "conf.php.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
+
+log "Navigate to 'http://#{server_fqdn}/wp-admin/install.php' to complete wordpress installation" do
+  action :nothing
 end
 
 directory "#{node['tinytinyrss']['dir']}" do
@@ -138,7 +144,7 @@ Array(node['nginx']['sites']).each do |u|
 		:port => u['uwsgi_port'],
 		:directory => u['directory']
 	  )
-          notifies :restart, "service[uwsgi]"
+    notifies :restart, "service[uwsgi]"
 	end
 	
 	template "/etc/nginx/sites-enabled/#{u['domain']}.conf" do

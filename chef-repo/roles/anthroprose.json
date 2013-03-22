@@ -35,17 +35,17 @@
 	],
 	"openvpn" : {
 		"key" : {
-    			"province" : "TX",
-	    		"city" : "Austin",
-    			"org" : "anthroprose",
-    			"email" : "anthroprose@anthroprose.com"
-    	    	},
-    	    	"local" : "",
-    	    	"proto" : "udp",
-    	    	"port" : "54",
-    	    	"subnet" : "10.0.44.0",
+			"province" : "TX",
+    		"city" : "Austin",
+			"org" : "anthroprose",
+			"email" : "anthroprose@anthroprose.com"
+    	},
+    	"local" : "",
+    	"proto" : "udp",
+    	"port" : "54",
+    	"subnet" : "10.0.44.0",
 		"netmask" : "255.255.255.0",
-	    	"routes" : [""]
+		"routes" : [""]
 	},
 	"authorization" : {
     		"sudo" : {
@@ -65,6 +65,7 @@
 		"server_repl_password" : "jDSyN3Hs8"
 	},
 	"nginx" : {
+		"default_domain" : "anthroprose.com",
 		"default_site_enabled" : false,
 		"sites" : [
 			{ "domain":"mail.anthroprose.com", "uwsgi_port":"2100", "directory":"/opt/horde" },
@@ -73,7 +74,10 @@
 		]
 	},
 	"horde" : {
-		"directory" : "/opt/horde"
+		"directory" : "/opt/horde",
+		"db" : {
+			"database" : "horde",
+		},
 	},
 	"wordpress" : {
 		"dir" : "/opt/wordpress",
