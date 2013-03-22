@@ -76,8 +76,8 @@
 	"horde" : {
 		"directory" : "/opt/horde",
 		"db" : {
-			"database" : "horde",
-		},
+			"database" : "horde"
+		}
 	},
 	"wordpress" : {
 		"dir" : "/opt/wordpress",

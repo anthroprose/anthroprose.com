@@ -108,7 +108,7 @@ template "#{node['horde']['directory']}/config/conf.php" do
   variables()
 end
 
-log "Navigate to 'http://#{server_fqdn}/wp-admin/install.php' to complete wordpress installation" do
+log "Navigate to 'http://#{#node['nginx']['default_domain']}/wp-admin/install.php' to complete wordpress installation" do
   action :nothing
 end
 
