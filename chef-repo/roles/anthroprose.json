@@ -33,7 +33,7 @@
 		"uwsgi-plugin-cgi",
 		"expect"
 	],
-        "openvpn" : {
+	"openvpn" : {
 		"key" : {
     			"province" : "TX",
 	    		"city" : "Austin",
@@ -46,7 +46,7 @@
     	    	"subnet" : "10.0.44.0",
 		"netmask" : "255.255.255.0",
 	    	"routes" : [""]
-    	},
+	},
 	"authorization" : {
     		"sudo" : {
     			"passwordless" : true,
@@ -67,11 +67,30 @@
 	"nginx" : {
 		"default_site_enabled" : false,
 		"sites" : [
-			{ "domain":"mail.anthroprose.com","uwsgi_port":"2100","directory":"/opt/horde"}
+			{ "domain":"mail.anthroprose.com", "uwsgi_port":"2100", "directory":"/opt/horde" },
+			{ "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" }
+			{ "domain":"reader.anthroprose.com", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" }
 		]
 	},
 	"horde" : {
 		"directory" : "/opt/horde"
+	},
+	"wordpress" : {
+		"dir" : "/opt/wordpress",
+		"db" : {
+			"user" : "wordpress",
+			"database" : "wordpress",
+			"password" : "kljas7986JHjs"
+		},
+		"keys" : {
+			"auth" : "kljas7986JHjs",
+			"secure_auth" : "kljas7986JHjs",
+			"logged_in" : "kljas7986JHjs",
+			"nonce" : "kljas7986JHjs"
+		}
+	},
+	"tinytinyrss" : {
+		"dir" :"/opt/tinytinyrss"
 	}
 }
 

@@ -38,6 +38,85 @@ service "uwsgi" do
   action [ :enable, :start ]
 end
 
+require 'digest/sha1'
+require 'open-uri'
+local_file = "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz"
+latest_sha1 = open('http://wordpress.org/latest.tar.gz.sha1') {|f| f.read }
+unless File.exists?(local_file) && ( Digest::SHA1.hexdigest(File.read(local_file)) == latest_sha1 )
+  remote_file "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz" do
+    source "http://wordpress.org/latest.tar.gz"
+    mode "0644"
+  end
+end
+ 
+directory "#{node['wordpress']['dir']}" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
+
+execute "untar-wordpress" do
+  cwd node['wordpress']['dir']
+  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz"
+  creates "#{node['wordpress']['dir']}/wp-settings.php"
+end
+
+execute "mysql-install-wp-privileges" do
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" < #{node['mysql']['conf_dir']}/wp-grants.sql"
+  action :nothing
+end
+
+execute "create #{node['wordpress']['db']['database']} database" do
+  command "/usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['wordpress']['db']['database']}"
+  not_if do
+    # Make sure gem is detected if it was just installed earlier in this recipe
+    require 'rubygems'
+    Gem.clear_paths
+    require 'mysql'
+    m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
+    m.list_dbs.include?(node['wordpress']['db']['database'])
+  end
+  notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
+end
+
+log "Navigate to 'http://#{server_fqdn}/wp-admin/install.php' to complete wordpress installation" do
+  action :nothing
+end
+
+template "#{node['mysql']['conf_dir']}/wp-grants.sql" do
+  source "grants.sql.erb"
+  owner "root"
+  group "root"
+  mode "0600"
+  variables(
+    :user => node['wordpress']['db']['user'],
+    :password => node['wordpress']['db']['password'],
+    :database => node['wordpress']['db']['database']
+  )
+  notifies :run, "execute[mysql-install-wp-privileges]", :immediately
+end
+
+directory "#{node['tinytinyrss']['dir']}" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
+
+remote_file "#{Chef::Config[:file_cache_path]}/tinytinyrss.tgz" do
+  source "https://github.com/gothfox/Tiny-Tiny-RSS/archive/1.7.4.tar.gz"
+  mode "0644"
+end
+
+
+execute "untar-wordpress" do
+  cwd node['tinytinyrss']['dir']
+  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/tinytinyrss.tgz"
+  creates "#{node['tinytinyrss']['dir']}/index.php"
+end
 
 Array(node['nginx']['sites']).each do |u|
 
