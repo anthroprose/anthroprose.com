@@ -114,8 +114,16 @@ template "#{node['horde']['directory']}/config/conf.php" do
   variables()
 end
 
-log "Navigate to 'http://#{node['nginx']['default_domain']}/wp-admin/install.php' to complete wordpress installation" do
-  action :nothing
+template "#{node['wordpress']['dir']}/wp-config.php" do
+  source "wp-config.php.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
+
+execute "touch_logs" do
+  command "touch #{node['horde']['directory']}/config/conf.bak.php;chmod 777 #{node['horde']['directory']}/config/conf.bak.php"
 end
 
 directory "#{node['tinytinyrss']['dir']}" do
