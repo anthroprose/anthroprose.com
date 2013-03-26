@@ -26,6 +26,7 @@
 		"php5-tidy",
 		"php5-xdebug",
 		"php5-dev",
+		"php5-mysql",
 		"libonig-dev",
 		"libqdbm-dev",
 		"uwsgi",
