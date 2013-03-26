@@ -57,6 +57,12 @@ script "create_databases" do
   EOH
 end
 
+execute "setup-horde-db" do
+  command "/usr/bin/horde-db-migrate;touch #{node['horde']['directory']}/db.log"
+  creates "#{node['horde']['directory']}/db.log"
+end
+
+
 require 'digest/sha1'
 require 'open-uri'
 local_file = "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz"
