@@ -119,7 +119,15 @@ template "#{node['wordpress']['dir']}/wp-config.php" do
   owner "root"
   group "root"
   mode "0777"
-  variables()
+  variables(
+    :user => node['wordpress']['db']['user'],
+    :password => node['wordpress']['db']['password'],
+    :database => node['wordpress']['db']['database'],
+    :auth_key => node['wordpress']['keys']['auth_key'],
+    :secure_auth_key => node['wordpress']['keys']['secure_auth_key'],
+    :logged_in_key => node['wordpress']['keys']['logged_in_key'],
+    :nonce_key => node['wordpress']['keys']['nonce_key']
+  )
 end
 
 execute "touch_logs" do
