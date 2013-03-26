@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo chef-solo -c ./chef-repo/config/chef-solo.rb -j ./chef-repo-roles/anthroprose.json
+sudo chef-solo -c ./chef-repo/config/solo.rb -j ./chef-repo/roles/anthroprose.json
