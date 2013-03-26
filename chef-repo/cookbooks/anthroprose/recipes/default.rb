@@ -52,8 +52,8 @@ script "create_databases" do
   user "root"
   group "root"
   code <<-EOH
-    /usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}
-    /usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
   EOH
 end
 
