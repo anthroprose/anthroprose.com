@@ -5,10 +5,20 @@ Source for anthroprose.com
 
 Bootstrap your own box using chef-solo.
 
+= Install
+
+wget -O - https://github.com/anthroprose/anthroprose.com/blob/master/init.sh | bash
+
+= Updates
+
+~/anthroprose/deploy.sh
+
+----------------------------------------
+
 = Highlights
 
 * OpenVPN via UDP 54 (DNSMASQ for Coffee Shops and other places)
-* Horde Webmail
+* Horde Webmail + IMAPcd a
 * Wordpress
 * TinyTinyRSS
 
@@ -21,3 +31,4 @@ Bootstrap your own box using chef-solo.
 * PHP
 * Python
 * Ruby
+* Dovecot
