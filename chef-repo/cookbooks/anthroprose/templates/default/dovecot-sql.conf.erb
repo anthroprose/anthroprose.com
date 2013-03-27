@@ -1,0 +1,6 @@
+driver = mysql
+connect = host=localhost dbname=horde user=root password=<%= node['mysql']['server_root_password'] %>
+default_pass_scheme = MD5-CRYPT
+password_query = SELECT user_uid AS username, user_pass AS password FROM horde_users WHERE user_uid = '%u'
+iterate_query = SELECT user_uid AS username FROM users
+user_query = SELECT 500 AS uid, 500 AS gid, home FROM users WHERE userid = '%n'

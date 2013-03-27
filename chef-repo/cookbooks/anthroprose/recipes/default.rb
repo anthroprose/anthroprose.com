@@ -12,14 +12,17 @@ php_pear_channel "pear.symfony.com" do
    action :discover
 end
 
+
+############### Horde
+
 hc = php_pear_channel "pear.horde.org" do
    action :discover
 end
 
 directory "#{node['horde']['directory']}" do
-  owner "root"
-  group "root"
-  mode "0755"
+  owner "www-data"
+  group "www-data"
+  mode "0775"
   action :create
   recursive true
 end
@@ -62,7 +65,19 @@ execute "setup-horde-db" do
   creates "#{node['horde']['directory']}/db.log"
 end
 
+template "#{node['horde']['directory']}/config/conf.php" do
+  source "conf.php.erb"
+  owner "www-data"
+  group "www-data"
+  mode "0775"
+  variables()
+end
 
+execute "touch_logs" do
+  command "chown -R www-data:www-data #{node['horde']['directory']};chmod -R g+rw #{node['horde']['directory']}"
+end
+
+################# Wordpress
 require 'digest/sha1'
 require 'open-uri'
 local_file = "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz"
@@ -106,14 +121,6 @@ template "#{node['mysql']['conf_dir']}/wp-grants.sql" do
   notifies :run, "execute[mysql-install-wp-privileges]", :immediately
 end
 
-template "#{node['horde']['directory']}/config/conf.php" do
-  source "conf.php.erb"
-  owner "root"
-  group "root"
-  mode "0777"
-  variables()
-end
-
 template "#{node['wordpress']['dir']}/wp-config.php" do
   source "wp-config.php.erb"
   owner "root"
@@ -130,10 +137,8 @@ template "#{node['wordpress']['dir']}/wp-config.php" do
   )
 end
 
-execute "touch_logs" do
-  command "touch #{node['horde']['directory']}/config/conf.bak.php;chmod 777 #{node['horde']['directory']}/config/conf.bak.php"
-end
 
+############################## TinyRSS
 directory "#{node['tinytinyrss']['dir']}" do
   owner "root"
   group "root"
@@ -148,7 +153,7 @@ remote_file "#{Chef::Config[:file_cache_path]}/tinytinyrss.tgz" do
 end
 
 
-execute "untar-wordpress" do
+execute "untar-tinyrss" do
   cwd node['tinytinyrss']['dir']
   command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/tinytinyrss.tgz"
   creates "#{node['tinytinyrss']['dir']}/index.php"
@@ -181,4 +186,21 @@ Array(node['nginx']['sites']).each do |u|
 	  notifies :restart, "service[nginx]"
 	end
 
+end
+
+####################### Dovecot
+template "/etc/dovecot/dovecot-sql.conf" do
+  source "dovecot-sql.conf.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
+
+template "/etc/dovecot/conf.d/auth-master.conf" do
+  source "auth-master.conf.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
 end
