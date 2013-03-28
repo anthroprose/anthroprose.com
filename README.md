@@ -18,7 +18,7 @@ wget -O - https://github.com/anthroprose/anthroprose.com/blob/master/init.sh | b
 # Highlights
 
 * OpenVPN via UDP 54 (DNSMASQ for Coffee Shops and other places)
-* Horde Webmail + IMAPcd a
+* Horde Webmail + IMAP
 * Wordpress
 * TinyTinyRSS
 
