@@ -31,7 +31,8 @@
 		"libqdbm-dev",
 		"uwsgi",
 		"uwsgi-plugin-cgi",
-		"dovecot-imapd"
+		"dovecot-imapd",
+		"aspell"
 	],
 	"openvpn" : {
 		"key" : {
@@ -48,11 +49,11 @@
 		"routes" : [""]
 	},
 	"authorization" : {
-    		"sudo" : {
-    			"passwordless" : true,
-    			"users" : ["ubuntu", "acorley"]
-    		}
-    	},
+		"sudo" : {
+			"passwordless" : true,
+			"users" : ["ubuntu", "acorley"]
+		}
+    },
 	"postfix" : {
 		"mail_relay_networks" : ["10.0.44.0/24","127.0.0.1/32"],
 		"myorigin":"anthroprose.com",

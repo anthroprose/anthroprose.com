@@ -48,6 +48,7 @@ search("users", "*:*") do |u|
     cwd node["openvpn"]["key_dir"]
     command <<-EOH
       tar zcf #{u['id']}.tar.gz ca.crt #{u['id']}.crt #{u['id']}.key #{u['id']}.conf #{u['id']}.ovpn
+      cp #{u['id']}.tar.gz /home/#{u['id']}/
     EOH
     not_if { ::File.exists?("#{node["openvpn"]["key_dir"]}/#{u['id']}.tar.gz") }
   end

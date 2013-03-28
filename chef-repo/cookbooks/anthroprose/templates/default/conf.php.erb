@@ -1,9 +1,11 @@
 <?php
 /* CONFIG START. DO NOT CHANGE ANYTHING IN OR AFTER THIS LINE. */
+// $Id: 968066befa22268df1b08080d9867fa05590d7bc $
 $conf['vhosts'] = false;
 $conf['debug_level'] = E_ALL & ~E_NOTICE;
 $conf['max_exec_time'] = 0;
 $conf['compress_pages'] = true;
+$conf['secret_key'] = '51524fa2-45ec-4e3b-bdc8-16c123605aef';
 $conf['umask'] = 077;
 $conf['testdisable'] = true;
 $conf['use_ssl'] = 2;
@@ -37,15 +39,16 @@ $conf['auth']['resetpassword'] = true;
 $conf['auth']['alternate_login'] = false;
 $conf['auth']['redirect_on_logout'] = false;
 $conf['auth']['list_users'] = 'list';
-$conf['auth']['params']['username'] = 'Administrator';
-$conf['auth']['params']['requestuser'] = false;
-$conf['auth']['driver'] = 'auto';
+$conf['auth']['params']['driverconfig'] = 'horde';
+$conf['auth']['params']['encryption'] = 'ssha';
+$conf['auth']['params']['show_encryption'] = false;
+$conf['auth']['driver'] = 'sql';
 $conf['auth']['params']['count_bad_logins'] = false;
 $conf['auth']['params']['login_block'] = false;
 $conf['auth']['params']['login_block_count'] = 5;
 $conf['auth']['params']['login_block_time'] = 5;
 $conf['signup']['allow'] = false;
-$conf['log']['priority'] = 'INFO';
+$conf['log']['priority'] = 'DEBUG';
 $conf['log']['ident'] = 'HORDE';
 $conf['log']['name'] = LOG_USER;
 $conf['log']['type'] = 'syslog';
@@ -89,7 +92,8 @@ $conf['vfs']['params']['driverconfig'] = 'horde';
 $conf['vfs']['type'] = 'Sql';
 $conf['sessionhandler']['type'] = 'Builtin';
 $conf['sessionhandler']['memcache'] = false;
-$conf['spell']['driver'] = '';
+$conf['spell']['params']['path'] = '/usr/bin/aspell';
+$conf['spell']['driver'] = 'aspell';
 $conf['gnupg']['keyserver'] = array('pool.sks-keyservers.net');
 $conf['gnupg']['timeout'] = 10;
 $conf['nobase64_img'] = false;
@@ -119,3 +123,4 @@ $conf['kolab']['enabled'] = false;
 $conf['memcache']['enabled'] = false;
 $conf['activesync']['enabled'] = false;
 /* CONFIG END. DO NOT CHANGE ANYTHING IN OR BEFORE THIS LINE. */
+
