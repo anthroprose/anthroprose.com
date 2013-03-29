@@ -112,7 +112,10 @@
 	"tinytinyrss" : {
 		"dir" :"/opt/tinytinyrss",
 		"domain" : "https://reader.anthroprose.com",
-		"email" : "anthroprose@gmail.com"
+		"email" : "anthroprose@gmail.com",
+		"db" : {
+            "database" : "tinytinyrss"
+        },
 	},
 	"diaspora" : {
 	   "dir" : "/opt/diaspora",
