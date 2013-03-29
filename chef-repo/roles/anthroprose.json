@@ -117,7 +117,8 @@
 	   "domain" : "http://me.anthroprose.com",
 	   "admin" : "anthroprose",
 	   "admin_email" : "anthroprose@gmail.com",
-	   "enable_registrations" : "false"
+	   "enable_registrations" : "false",
+	   "require_ssl" : "false"
 	}
 }
 
