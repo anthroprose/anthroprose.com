@@ -3,7 +3,7 @@ server {
 	listen       80;
 	server_name  <%= @domain %>;
 	location / {
-		rewrite ^(.*) https://domain.com$1 permanent;
+		rewrite ^(.*) https://<%= @domain %>$1 permanent;
 	}
 }
 <% end -%>
