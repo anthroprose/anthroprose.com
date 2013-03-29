@@ -3,7 +3,7 @@ mysql: &mysql
   host: "localhost"
   port: 3306
   username: "root"
-  password: "#{node['mysql']['server_root_password']}"
+  password: "<%= node['mysql']['server_root_password'] %>"
 #  socket: /tmp/mysql.sock
   charset: utf8
   collation: utf8_bin
