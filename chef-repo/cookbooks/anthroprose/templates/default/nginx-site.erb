@@ -35,25 +35,14 @@ server {
         uwsgi_send_timeout      1000s;
         uwsgi_read_timeout      1000s;
 
-		<% if @directory == '/opt/diaspora/public' -%>
-		location ~ ^/(images|javascripts|assets|stylesheets|uploads)/  {
-			root    <%= @directory %>;
-			expires 30d;
-			add_header Cache-Control public;
-			access_log off;
-		}
+<% if @directory == '/opt/diaspora/public' -%>
+		try_files $uri @diaspora;
 		
-		location  ^~ /uploads/images/ {
-			root    <%= @directory %>;
-			expires 30d;
-			add_header Cache-Control public;
-			access_log off;
-		}
-
-		<% end -%>
-
+		location @diaspora {
+<% else -%>
         location / {
-        	
+<% end -%>
+
 <% if @proxy == 'true' -%>
                 proxy_redirect off;
                 proxy_set_header Host $host;
