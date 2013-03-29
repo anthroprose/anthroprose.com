@@ -205,6 +205,13 @@ script "install_diaspora_db" do
   EOH
 end
 
+directory "/etc/nginx/ssl/" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
 
 Array(node['nginx']['sites']).each do |u|
 
@@ -236,6 +243,18 @@ Array(node['nginx']['sites']).each do |u|
 	  )
 	  notifies :restart, "service[nginx]"
 	end
+	
+  script "create-ssl-certs-#{u['domain']}" do
+    not_if { File.exists?("/etc/nginx/ssl/#{u[:domain]}.crt") }
+    interpreter "bash"
+    timeout 3600
+    user "root"
+    group "root"
+    cwd "/etc/nginx/ssl/"
+    code <<-EOH
+      openssl req -new -x509 -nodes -out /etc/nginx/ssl/#{u[:domain]}.crt -keyout /etc/nginx/ssl/#{u[:domain]}.key -subj \"/C=US/ST=TX/L=Austin/O=#{u[:domain]}/OU=#{u[:domain]}/CN=#{u[:domain]}/emailAddress=webmaster@#{u[:domain]}\"
+    EOH
+  end
 
 end
 
