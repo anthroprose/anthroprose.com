@@ -207,6 +207,13 @@ execute "setup-tinytinyrss-db" do
   creates "#{node['tinytinyrss']['dir']}/db.log"
 end
 
+cron "tty-rss" do
+  user "www-data"
+  hour "*"
+  minute "30"
+  command "cd #{node['tinytinyrss']['dir']} && /usr/bin/php #{node['tinytinyrss']['dir']}/update.php --feeds >/dev/null 2>&1"  
+end
+    
 ############################ Diaspora
 
 gem_package('bundler') do
