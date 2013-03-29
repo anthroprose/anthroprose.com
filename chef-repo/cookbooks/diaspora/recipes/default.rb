@@ -7,7 +7,7 @@ user_account 'diaspora' do
   comment       'diaspora'
   home          node[:diaspora][:dir]
   manage_home   false
-  gid           %x[id -g www-data]
+  gid           %x[id -g www-data].to_i
 end
 
 gem_package('bundler') do

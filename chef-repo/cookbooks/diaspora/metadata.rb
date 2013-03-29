@@ -7,7 +7,7 @@ recipe            "diaspora", "Diaspora Install"
 
 depends           "mysql"
 depends           "chef_handler"
-depends           "minitest-handler"
+depends           "minitest"
 depends           "user"
 depends           "nginx"
 
