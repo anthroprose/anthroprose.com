@@ -211,7 +211,7 @@ cron "tty-rss" do
   user "www-data"
   hour "*"
   minute "30"
-  command "cd #{node['tinytinyrss']['dir']} && /usr/bin/php #{node['tinytinyrss']['dir']}/update.php --feeds >/dev/null 2>&1"  
+  command "cd #{node['tinytinyrss']['dir']} && /usr/bin/php #{node['tinytinyrss']['dir']}/update.php -feeds >/dev/null 2>&1"  
 end
 
 directory "/etc/nginx/ssl/" do
