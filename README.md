@@ -16,7 +16,10 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 	"id" : "config",
     "mysql_root_password" : "xxxxxxx",
     "wordpress_db_password" : "xxxxxxx",
-    "wordpress_keys_hash" : "xxxxxxx"
+    "wordpress_keys_hash" : "xxxxxxx",
+    "diaspora_facebook_enable" : "false",
+    "diaspora_facebook_app_id" : "",
+    "diaspora_facebook_secret" : ""
 }
 
 ```

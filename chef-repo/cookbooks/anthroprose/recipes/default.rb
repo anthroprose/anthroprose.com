@@ -185,6 +185,14 @@ script "install_diaspora" do
   EOH
 end
 
+template "/opt/diaspora/config/database.yml" do
+  source "database.yml.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
+
 template "/opt/diaspora/config/diaspora.yml" do
   source "diaspora.yml.erb"
   owner "root"
