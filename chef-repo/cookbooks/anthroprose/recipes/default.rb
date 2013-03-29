@@ -167,7 +167,15 @@ template "#{node['tinytinyrss']['dir']}/config.php" do
   variables()
 end
 
-directory "#{node['tinytinyrss']['dir']}/cache" do
+directory "#{node['tinytinyrss']['dir']}/cache/images" do
+  owner "root"
+  group "root"
+  mode "0777"
+  action :create
+  recursive true
+end
+
+directory "#{node['tinytinyrss']['dir']}/cache/export" do
   owner "root"
   group "root"
   mode "0777"
