@@ -193,6 +193,14 @@ template "/opt/diaspora/config/diaspora.yml" do
   variables()
 end
 
+template "/etc/init.d/diaspora" do
+  source "diaspora.init.d.erb"
+  owner "root"
+  group "root"
+  mode "0755"
+  variables()
+end
+
 script "install_diaspora_db" do
   not_if { File.exists?("/opt/diaspora/log/development.log") }
   interpreter "bash"
@@ -201,8 +209,25 @@ script "install_diaspora_db" do
   group "root"
   cwd "/opt/diaspora/"
   code <<-EOH
-    bundle exec rake db:schema:load_if_ruby --trace
+    bundle exec rake db:create
+    RAILS_ENV=production bundle exec rake db:create
+    bundle exec rake db:schema:load
+    RAILS_ENV=production bundle exec rake db:schema:load
+    bundle exec rake assets:precompile
   EOH
+end
+
+directory "/var/log/diaspora" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
+
+service "diaspora" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
 end
 
 directory "/etc/nginx/ssl/" do
