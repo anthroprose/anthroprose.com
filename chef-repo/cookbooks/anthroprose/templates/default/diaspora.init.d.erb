@@ -41,22 +41,8 @@ setup () {
 }
  
 start_stop () {
-	# either run the start/stop/reload/etc command for every config under /etc/unicorn
-	# or just do it for a specific one
-	 
-	# $1 contains the start/stop/etc command
-	# $2 if it exists, should be the specific config we want to act on
-	if [ $2 ]; then
-		. $2
-		setup
-		cmd $1
-	else
-		setup
-		 
-		# run the start/stop/etc command
-		cmd $1
-		done
-	fi
+	setup
+	cmd $1
 }
  
 ARGS="$1 $2"
