@@ -115,7 +115,7 @@
 		"email" : "anthroprose@gmail.com"
 	},
 	"diaspora" : {
-	   "dir" : "/opt/diaspora"
+	   "dir" : "/opt/diaspora",
 	   "pod_name" : "anthroprose",
 	   "domain" : "https://me.anthroprose.com",
 	   "admin" : "anthroprose",
