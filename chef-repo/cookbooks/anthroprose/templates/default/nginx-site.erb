@@ -36,11 +36,20 @@ server {
         uwsgi_read_timeout      1000s;
 
 		<% if @directory == '/opt/diaspora/public' -%>
-		location ~* ^.+.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|pdf|txt|tar|wav|bmp|rtf|js|flv|swf|html|htm)$ {
-			
-			root <%= @directory %>;
-			
-    	}
+		location ~ ^/(images|javascripts|assets|stylesheets|uploads)/  {
+			root    <%= @directory %>;
+			expires 30d;
+			add_header Cache-Control public;
+			access_log off;
+		}
+		
+		location  ^~ /uploads/images/ {
+			root    <%= @directory %>;
+			expires 30d;
+			add_header Cache-Control public;
+			access_log off;
+		}
+
 		<% end -%>
 
         location / {
