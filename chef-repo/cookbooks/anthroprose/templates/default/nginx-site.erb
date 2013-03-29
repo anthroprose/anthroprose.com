@@ -1,3 +1,12 @@
+<% if @proxy == 'true' -%>
+server {
+	listen       80;
+	server_name  <%= @domain %>;
+	location / {
+		rewrite ^(.*) https://domain.com$1 permanent;
+	}
+}
+<% end -%>
 server {
 
 <% if @proxy == 'true' -%>
