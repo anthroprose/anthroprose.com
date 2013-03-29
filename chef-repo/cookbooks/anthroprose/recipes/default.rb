@@ -203,7 +203,7 @@ directory "#{node['tinytinyrss']['dir']}/lock" do
 end
 
 execute "setup-tinytinyrss-db" do
-  command "mysql -uroot -p#{node['mysql']['server_root_password']} < #{node['tinytinyrss']['dir']}/schema/ttrss_schema_mysql.sql;touch #{node['tinytinyrss']['dir']}/db.log"
+  command "mysql -uroot -p#{node['mysql']['server_root_password']} #{node['tinytinyrss']['db']['database']} < #{node['tinytinyrss']['dir']}/schema/ttrss_schema_mysql.sql;touch #{node['tinytinyrss']['dir']}/db.log"
   creates "#{node['tinytinyrss']['dir']}/db.log"
 end
 
