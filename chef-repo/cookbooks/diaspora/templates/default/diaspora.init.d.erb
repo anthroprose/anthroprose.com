@@ -7,27 +7,28 @@ cmd () {
 	case $1 in
 		start)
 			echo $DAEMON_OPTS
-			start-stop-daemon --start --quiet --pidfile $PID \
+			start-stop-daemon -u diaspora -g www-data --start --quiet --pidfile $PID \
 			--exec $DAEMON -- $DAEMON_OPTS || true
-			echo "Starting with config: $RAILS_ROOT/config/unicorn.rb"
+			echo "$NAME"
 		;;
 		stop)
-			start-stop-daemon --stop --quiet --pidfile $PID || true
-			echo "Stopping with config: $RAILS_ROOT/config/unicorn.rb"
+			start-stop-daemon -u diaspora -g www-data --stop --quiet --pidfile $PID || true
+			echo "$NAME"
 		;;
 		restart|reload)
-			start-stop-daemon --stop --quiet --pidfile $PID || true
+			start-stop-daemon -u diaspora -g www-data --stop --quiet --pidfile $PID || true
 			echo "Stopping with config: $RAILS_ROOT/config/unicorn.rb"
 			sleep 1
-			start-stop-daemon --start --quiet --pidfile $PID \
+			start-stop-daemon -u diaspora -g www-data --start --quiet --pidfile $PID \
 			--exec $DAEMON -- $DAEMON_OPTS || true
-			echo "Starting with config: $RAILS_ROOT/config/unicorn.rb"
+			echo "$NAME"
 		;;
 		*)
 			echo >&2 "Usage: $0 <start|stop|restart>"
 			exit 1
 		;;
 	esac
+	
 }
  
 setup () {
@@ -35,7 +36,7 @@ setup () {
 	export PID=/var/run/diaspora.pid
 	export OLD_PID="$PID.oldbin"
 	 
-	DAEMON="/opt/diaspora/script/server"
+	DAEMON="<%= node['diaspora']['dir'] %>/script/server"
 	DAEMON_OPTS=""
 	
 }
@@ -44,6 +45,5 @@ start_stop () {
 	setup
 	cmd $1 &
 }
- 
-ARGS="$1 $2"
-start_stop $ARGS
+
+start_stop $1
