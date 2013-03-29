@@ -115,7 +115,7 @@
 		"email" : "anthroprose@gmail.com",
 		"db" : {
             "database" : "tinytinyrss"
-        },
+        }
 	},
 	"diaspora" : {
 	   "dir" : "/opt/diaspora",
