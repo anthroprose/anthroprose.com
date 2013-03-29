@@ -114,7 +114,7 @@
 	},
 	"diaspora" : {
 	   "pod_name" : "anthroprose",
-	   "domain" : "http://me.anthroprose.com",
+	   "domain" : "https://me.anthroprose.com",
 	   "admin" : "anthroprose",
 	   "admin_email" : "anthroprose@gmail.com",
 	   "enable_registrations" : "false",
