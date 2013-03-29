@@ -5,6 +5,7 @@
 	"instance_role": "anthroprose",
 	"databag" : "anthroprose",
 	"run_list": [
+	    "recipe[anthroprose::init]",
 		"recipe[apt]",
 		"recipe[php]",
 		"recipe[git]",
