@@ -6,7 +6,7 @@
 	define('DB_TYPE', "mysql"); // or mysql
 	define('DB_HOST', "localhost");
 	define('DB_USER', "root");
-	define('DB_NAME', "tinytinyrss");
+	define('DB_NAME', "<%= node['tinytinyrss']['db']['database'] %>");
 	define('DB_PASS', "<%= node['mysql']['server_root_password'] %>");
 	//define('DB_PORT', '5432'); // when neeeded, PG-only
 
