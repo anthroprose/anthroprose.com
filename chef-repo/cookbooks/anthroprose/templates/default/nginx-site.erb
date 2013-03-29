@@ -35,6 +35,14 @@ server {
         uwsgi_send_timeout      1000s;
         uwsgi_read_timeout      1000s;
 
+		<% if @directory == '/opt/diaspora/public' -%>
+		location ~* ^.+.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|pdf|txt|tar|wav|bmp|rtf|js|flv|swf|html|htm)$ {
+			
+			root <%= @directory %>;
+			
+    	}
+		<% end -%>
+
         location / {
         	
 <% if @proxy == 'true' -%>
