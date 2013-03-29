@@ -268,8 +268,8 @@ configuration: ## Section
     facebook: ## Section
 <% if node['diaspora']['facebook']['enable'] == 'true' then -%>
       enable: true
-      app_id: 'node['diaspora']['facebook']['app_id']'
-      secret: 'node['diaspora']['facebook']['secret']'
+      app_id: '<%= node['diaspora']['facebook']['app_id'] %>'
+      secret: '<%= node['diaspora']['facebook']['secret'] %>'
 <% end -%>
 
     ## OAuth credentials for Twitter:
