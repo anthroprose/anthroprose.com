@@ -92,7 +92,7 @@
 		"sites" : [
 			{ "domain":"mail.anthroprose.com", "uwsgi_port":"2100", "directory":"/opt/horde" },
 			{ "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
-			{ "domain":"reader.anthroprose.com", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" }
+			{ "domain":"reader.anthroprose.com", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" },
 			{ "domain":"me.anthroprose.com", "proxy":"true", "proxy_location":"http://localhost:3000" }
 		]
 	},
