@@ -3,6 +3,7 @@
 	"hostname":"anthroprose.com",
 	"description": "The base role for Anthroprose.com",
 	"instance_role": "anthroprose",
+	"databag" : "anthroprose",
 	"run_list": [
 		"recipe[apt]",
 		"recipe[php]",
@@ -81,10 +82,7 @@
 		"mydomain":"anthroprose.com"
 	},
 	"mysql" : {
-		"bind_address" : "127.0.0.1",
-		"server_root_password" : "jDSyN3Hs8",
-		"server_debian_password" : "jDSyN3Hs8",
-		"server_repl_password" : "jDSyN3Hs8"
+		"bind_address" : "127.0.0.1"
 	},
 	"nginx" : {
 		"default_domain" : "anthroprose.com",
@@ -107,13 +105,8 @@
 		"db" : {
 			"user" : "wordpress",
 			"database" : "wordpress",
-			"password" : "kljas7986JHjs"
 		},
 		"keys" : {
-			"auth" : "kljas7986JHjs",
-			"secure_auth" : "kljas7986JHjs",
-			"logged_in" : "kljas7986JHjs",
-			"nonce" : "kljas7986JHjs"
 		}
 	},
 	"tinytinyrss" : {
@@ -122,7 +115,13 @@
 	"diaspora" : {
 	   "pod_name" : "anthroprose",
 	   "domain" : "http://me.anthroprose.com",
-	   
+	   "admin" : "anthroprose",
+	   "admin_email" : "anthroprose@gmail.com",
+	   "enable_registrations" : "false",
+	   "facebook" : {
+	       "app_id" : "",
+	       "secret" : ""
+	   }
 	}
 }
 
