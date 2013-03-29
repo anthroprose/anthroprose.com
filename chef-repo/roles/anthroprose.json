@@ -104,7 +104,7 @@
 		"dir" : "/opt/wordpress",
 		"db" : {
 			"user" : "wordpress",
-			"database" : "wordpress",
+			"database" : "wordpress"
 		},
 		"keys" : {
 		}
