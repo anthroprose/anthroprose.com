@@ -1,0 +1,6 @@
+{
+    "id" : "config",
+    "diaspora_facebook_enable" : "true",
+    "diaspora_facebook_app_id" : "392397790859401",
+    "diaspora_facebook_secret" : "eb25bafa9f0ede79ec85513cc145459a"
+}

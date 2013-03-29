@@ -13,6 +13,7 @@
 		"recipe[nginx]",
 		"recipe[mysql::server]",
  		"recipe[anthroprose]",
+ 		"recipe[diaspora]",
  		"recipe[openvpn]",
 		"recipe[openvpn::users]",
 		"recipe[postfix::server]"
@@ -90,8 +91,7 @@
 		"sites" : [
 			{ "domain":"mail.anthroprose.com", "uwsgi_port":"2100", "directory":"/opt/horde" },
 			{ "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
-			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" },
-			{ "domain":"me.anthroprose.com", "https":"true", "proxy":"true", "proxy_location":"http://localhost:3000", "directory":"/opt/diaspora/public" }
+			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" }
 		]
 	},
 	"horde" : {
@@ -120,11 +120,14 @@
 	"diaspora" : {
 	   "dir" : "/opt/diaspora",
 	   "pod_name" : "anthroprose",
-	   "domain" : "https://me.anthroprose.com",
+	   "domain" : "me.anthroprose.com",
+	   "url" : "https://me.anthroprose.com",
 	   "admin" : "anthroprose",
 	   "admin_email" : "anthroprose@gmail.com",
 	   "enable_registrations" : "false",
-	   "require_ssl" : "false"
+	   "require_ssl" : "false",
+	   "city" : "Austin",
+	   "state" : "TX"
 	}
 }
 
