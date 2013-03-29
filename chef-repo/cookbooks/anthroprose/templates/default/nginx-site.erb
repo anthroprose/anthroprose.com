@@ -23,7 +23,18 @@ server {
         uwsgi_read_timeout      1000s;
 
         location / {
+<% if @proxy == 'true' -%>
 
+                proxy_redirect off;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Forwarded-Proto https;
+#                proxy_redirect http:// https://;
+                proxy_pass <%= @proxy_location %>;
+
+
+<% else -%>
                 if (-e $request_filename) { break; }
 
                 if (!-f $request_filename) {
@@ -33,15 +44,17 @@ server {
                 }
 
                 index index.php;
+<% end -%>
 
         }
 
+<% if @proxy != 'true' -%>
         location ~ \.php$ {
 
                 include uwsgi_params;
                 uwsgi_pass 127.0.0.1:<%= @uwsgi_port %>;
                 uwsgi_modifier1 9;
         }
-
+<% end -%>
 }
 

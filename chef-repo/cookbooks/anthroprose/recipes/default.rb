@@ -159,19 +159,68 @@ execute "untar-tinyrss" do
   creates "#{node['tinytinyrss']['dir']}/index.php"
 end
 
+############################ Diaspora
+
+gem_package('bundler') do
+  :install
+end
+
+git "/opt/diaspora" do
+  repository "git://github.com/diaspora/diaspora.git"
+  branch "master"
+  action :sync
+  user 'root'
+  group 'root'
+end
+
+script "install_diaspora" do
+  not_if { File.exists?("/opt/diaspora/config/diaspora.yml") }
+  interpreter "bash"
+  timeout 3600
+  user "root"
+  group "root"
+  cwd "/opt/diaspora/"
+  code <<-EOH
+    bundle install
+  EOH
+end
+
+template "/opt/diaspora/config/diaspora.yml" do
+  source "diaspora.yml.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
+
+script "install_diaspora_db" do
+  not_if { File.exists?("/opt/diaspora/log/development.log") }
+  interpreter "bash"
+  timeout 3600
+  user "root"
+  group "root"
+  cwd "/opt/diaspora/"
+  code <<-EOH
+    bundle exec rake db:schema:load_if_ruby --trace
+  EOH
+end
+
+
 Array(node['nginx']['sites']).each do |u|
 
 	Chef::Log.info "Generating site configuration for: " << u['domain']
 
-	template "/etc/uwsgi/apps-enabled/#{u['domain']}.ini" do
-	  source "uwsgi.erb"
-	  owner "root"
-	  group "root"
-	  variables(
-		:port => u['uwsgi_port'],
-		:directory => u['directory']
-	  )
-    notifies :restart, "service[uwsgi]"
+  if u.has_key?('uwsgi_port') then
+  	template "/etc/uwsgi/apps-enabled/#{u['domain']}.ini" do
+  	  source "uwsgi.erb"
+  	  owner "root"
+  	  group "root"
+  	  variables(
+  		:port => u['uwsgi_port'],
+  		:directory => u['directory']
+  	  )
+      notifies :restart, "service[uwsgi]"
+  	end
 	end
 	
 	template "/etc/nginx/sites-enabled/#{u['domain']}.conf" do
@@ -179,9 +228,11 @@ Array(node['nginx']['sites']).each do |u|
 	  owner "root"
 	  group "root"
 	  variables(
-		:uwsgi_port => u['uwsgi_port'],
+		:uwsgi_port => u['uwsgi_port']||'',
 		:directory => u['directory'],
-		:domain => u['domain']
+		:domain => u['domain'],
+		:proxy => u['proxy']||'false',
+		:proxy_location => u['proxy_location']||''
 	  )
 	  notifies :restart, "service[nginx]"
 	end
