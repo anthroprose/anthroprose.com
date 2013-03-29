@@ -9,7 +9,7 @@ server {
 <% end -%>
 server {
 
-<% if @proxy == 'true' -%>
+<% if @https == 'true' -%>
         listen 443;
 
         ssl                     on;
@@ -35,7 +35,7 @@ server {
         uwsgi_send_timeout      1000s;
         uwsgi_read_timeout      1000s;
 
-<% if @directory == '/opt/diaspora/public' -%>
+<% if @directory == '#{node['diaspora']['dir']}/public' -%>
 		try_files $uri @diaspora;
 		
 		location @diaspora {

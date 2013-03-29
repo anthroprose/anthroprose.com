@@ -110,9 +110,12 @@
 		}
 	},
 	"tinytinyrss" : {
-		"dir" :"/opt/tinytinyrss"
+		"dir" :"/opt/tinytinyrss",
+		"domain" : "https://reader.anthroprose.com",
+		"email" : "anthroprose@gmail.com"
 	},
 	"diaspora" : {
+	   "dir" : "/opt/diaspora"
 	   "pod_name" : "anthroprose",
 	   "domain" : "https://me.anthroprose.com",
 	   "admin" : "anthroprose",

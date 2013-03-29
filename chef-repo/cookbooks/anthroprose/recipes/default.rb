@@ -159,13 +159,21 @@ execute "untar-tinyrss" do
   creates "#{node['tinytinyrss']['dir']}/index.php"
 end
 
+template "#{node['tinytinyrss']['dir']}/config.php" do
+  source "config.php.erb"
+  owner "root"
+  group "root"
+  mode "0755"
+  variables()
+end
+
 ############################ Diaspora
 
 gem_package('bundler') do
   :install
 end
 
-git "/opt/diaspora" do
+git "#{node['diaspora']['dir']}" do
   repository "git://github.com/diaspora/diaspora.git"
   branch "master"
   action :sync
@@ -174,18 +182,18 @@ git "/opt/diaspora" do
 end
 
 script "install_diaspora" do
-  not_if { File.exists?("/opt/diaspora/config/diaspora.yml") }
+  not_if { File.exists?("#{node[:diaspora][:dir]}/config/diaspora.yml") }
   interpreter "bash"
   timeout 3600
   user "root"
   group "root"
-  cwd "/opt/diaspora/"
+  cwd "#{node['diaspora']['dir']}"
   code <<-EOH
     bundle install
   EOH
 end
 
-template "/opt/diaspora/config/database.yml" do
+template "#{node['diaspora']['dir']}/config/database.yml" do
   source "database.yml.erb"
   owner "root"
   group "root"
@@ -193,7 +201,7 @@ template "/opt/diaspora/config/database.yml" do
   variables()
 end
 
-template "/opt/diaspora/config/diaspora.yml" do
+template "#{node['diaspora']['dir']}/config/diaspora.yml" do
   source "diaspora.yml.erb"
   owner "root"
   group "root"
@@ -210,12 +218,12 @@ template "/etc/init.d/diaspora" do
 end
 
 script "install_diaspora_db" do
-  not_if { File.exists?("/opt/diaspora/log/development.log") }
+  not_if { File.exists?("#{node[:diaspora][:dir]}/log/development.log") }
   interpreter "bash"
   timeout 3600
   user "root"
   group "root"
-  cwd "/opt/diaspora/"
+  cwd "#{node['diaspora']['dir']}"
   code <<-EOH
     bundle exec rake db:create
     RAILS_ENV=production bundle exec rake db:create
@@ -272,6 +280,7 @@ Array(node['nginx']['sites']).each do |u|
 		:directory => u['directory'],
 		:domain => u['domain'],
 		:proxy => u['proxy']||'false',
+		:https => u['https']||'false',
 		:proxy_location => u['proxy_location']||''
 	  )
 	  notifies :restart, "service[nginx]"
