@@ -3,7 +3,6 @@
 	"hostname":"anthroprose.com",
 	"description": "The base role for Anthroprose.com",
 	"instance_role": "anthroprose",
-	"databag" : "anthroprose",
 	"run_list": [
 	    "recipe[anthroprose::init]",
 		"recipe[apt]",
@@ -118,11 +117,7 @@
 	   "domain" : "http://me.anthroprose.com",
 	   "admin" : "anthroprose",
 	   "admin_email" : "anthroprose@gmail.com",
-	   "enable_registrations" : "false",
-	   "facebook" : {
-	       "app_id" : "",
-	       "secret" : ""
-	   }
+	   "enable_registrations" : "false"
 	}
 }
 

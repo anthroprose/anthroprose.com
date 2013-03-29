@@ -9,6 +9,18 @@ Bootstrap your own box using chef-solo.
 
 wget -O - https://github.com/anthroprose/anthroprose.com/blob/master/init.sh | bash
 
+Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
+
+```json
+{
+	"id" : "config",
+    "mysql_root_password" : "xxxxxxx",
+    "wordpress_db_password" : "xxxxxxx",
+    "wordpress_keys_hash" : "xxxxxxx"
+}
+
+```
+
 # Updates
 
 ~/anthroprose/deploy.sh
@@ -17,10 +29,11 @@ wget -O - https://github.com/anthroprose/anthroprose.com/blob/master/init.sh | b
 
 # Highlights
 
-* OpenVPN via UDP 54 (DNSMASQ for Coffee Shops and other places)
-* Horde Webmail + IMAP
-* Wordpress
-* TinyTinyRSS
+* OpenVPN via UDP 54 (DNSMASQ for Coffee Shops and other places) (vpn.athroprose.com)
+* Horde Webmail + IMAP (https://mail.anthroprose.com)
+* Wordpress (http://www.anthroprose.com)
+* TinyTinyRSS (https://reader.anthroprose.com)
+* Diaspora (https://me.anthroprose.com)
 
 ----------------------------------------
 
