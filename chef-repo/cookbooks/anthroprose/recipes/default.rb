@@ -13,6 +13,20 @@ php_pear_channel "pear.symfony.com" do
 end
 
 
+############### DBs
+
+script "create_databases" do
+  interpreter "bash"
+  timeout 3600
+  user "root"
+  group "root"
+  code <<-EOH
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['tinytinyrss']['db']['database']}"
+  EOH
+end
+
 ############### Horde
 
 hc = php_pear_channel "pear.horde.org" do
@@ -47,18 +61,6 @@ end
 service "uwsgi" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
-end
-
-script "create_databases" do
-  interpreter "bash"
-  timeout 3600
-  user "root"
-  group "root"
-  code <<-EOH
-    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
-    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
-    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['tinytinyrss']['db']['database']}"
-  EOH
 end
 
 execute "setup-horde-db" do
@@ -198,6 +200,11 @@ directory "#{node['tinytinyrss']['dir']}/lock" do
   mode "0777"
   action :create
   recursive true
+end
+
+execute "setup-tinytinyrss-db" do
+  command "mysql -uroot -p#{node['mysql']['server_root_password']} < #{node['tinytinyrss']['dir']}/schema/ttrss_schema_mysql.sql;touch #{node['tinytinyrss']['dir']}/db.log"
+  creates "#{node['tinytinyrss']['dir']}/db.log"
 end
 
 ############################ Diaspora
