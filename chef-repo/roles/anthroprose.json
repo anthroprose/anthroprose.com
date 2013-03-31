@@ -32,6 +32,7 @@
 		"php5-imap",
 		"libonig-dev",
 		"libqdbm-dev",
+		"libxdiff",
 		"uwsgi",
 		"uwsgi-plugin-cgi",
 		"dovecot-imapd",
@@ -99,7 +100,8 @@
 		"directory" : "/opt/horde",
 		"db" : {
 			"database" : "horde"
-		}
+		},
+		"admin_user" : "acorley"
 	},
 	"wordpress" : {
 		"dir" : "/opt/wordpress",

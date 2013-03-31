@@ -273,14 +273,22 @@ template "/etc/dovecot/dovecot-sql.conf" do
   source "dovecot-sql.conf.erb"
   owner "root"
   group "root"
-  mode "0777"
+  mode "0755"
   variables()
 end
 
-template "/etc/dovecot/conf.d/auth-master.conf" do
-  source "auth-master.conf.erb"
+template "/etc/dovecot/dovecot.conf" do
+  source "dovecotconf.erb"
   owner "root"
   group "root"
-  mode "0777"
+  mode "0755"
   variables()
 end
+
+#template "/etc/dovecot/conf.d/auth-master.conf" do
+#  source "auth-master.conf.erb"
+#  owner "root"
+#  group "root"
+#  mode "0777"
+#  variables()
+#end
