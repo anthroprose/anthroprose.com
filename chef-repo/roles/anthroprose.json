@@ -32,7 +32,6 @@
 		"php5-imap",
 		"libonig-dev",
 		"libqdbm-dev",
-		"libxdiff",
 		"uwsgi",
 		"uwsgi-plugin-cgi",
 		"dovecot-imapd",
