@@ -278,7 +278,7 @@ template "/etc/dovecot/dovecot-sql.conf" do
 end
 
 template "/etc/dovecot/dovecot.conf" do
-  source "dovecotconf.erb"
+  source "dovecot.conf.erb"
   owner "root"
   group "root"
   mode "0755"
