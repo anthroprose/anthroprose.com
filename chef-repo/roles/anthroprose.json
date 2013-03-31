@@ -29,6 +29,7 @@
 		"php5-xdebug",
 		"php5-dev",
 		"php5-mysql",
+		"php5-imap",
 		"libonig-dev",
 		"libqdbm-dev",
 		"uwsgi",
