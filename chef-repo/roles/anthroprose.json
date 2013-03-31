@@ -35,6 +35,7 @@
 		"uwsgi",
 		"uwsgi-plugin-cgi",
 		"dovecot-imapd",
+		"dovecot-mysql",
 		"aspell",
 		"build-essential",
 		"libxslt1.1",

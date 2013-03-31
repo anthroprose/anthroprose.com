@@ -285,10 +285,10 @@ template "/etc/dovecot/dovecot.conf" do
   variables()
 end
 
-#template "/etc/dovecot/conf.d/auth-master.conf" do
-#  source "auth-master.conf.erb"
-#  owner "root"
-#  group "root"
-#  mode "0777"
-#  variables()
-#end
+template "/etc/dovecot/conf.d/auth-master.conf" do
+  source "auth-master.conf.erb"
+  owner "root"
+  group "root"
+  mode "0777"
+  variables()
+end
