@@ -37,7 +37,7 @@
 		"dovecot-imapd",
 		"dovecot-mysql",
 		"aspell",
-		"memcached"
+		"memcached",
 		"build-essential",
 		"libxslt1.1",
 		"libxslt1-dev",
