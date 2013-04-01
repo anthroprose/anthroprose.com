@@ -76,7 +76,7 @@ template "#{node['horde']['directory']}/config/conf.php" do
   variables()
 end
 
-Array(['kronolith','mnemo','nag','turba']).each do |c|
+Array(['kronolith','mnemo','nag','turba', 'ingo']).each do |c|
   
   template "#{node['horde']['directory']}/#{c}/config/conf.php" do
     source "#{c}-conf.php.erb"
