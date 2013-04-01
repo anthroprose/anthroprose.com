@@ -76,6 +76,18 @@ template "#{node['horde']['directory']}/config/conf.php" do
   variables()
 end
 
+Array(['kronolith','mnemo','nag','turba']).each do |c|
+  
+  template "#{node['horde']['directory']}/#{c}/config/conf.php" do
+    source "#{c}-conf.php.erb"
+    owner "www-data"
+    group "www-data"
+    mode "0775"
+    variables()
+  end
+  
+end
+
 execute "touch_logs" do
   command "chown -R www-data:www-data #{node['horde']['directory']};chmod -R g+rw #{node['horde']['directory']}"
 end
@@ -285,10 +297,18 @@ template "/etc/dovecot/dovecot.conf" do
   variables()
 end
 
-template "/etc/dovecot/conf.d/auth-master.conf" do
-  source "auth-master.conf.erb"
+template "/etc/dovecot/conf.d/10-ssl.conf" do
+  source "10-ssl.conf.erb"
   owner "root"
   group "root"
-  mode "0777"
+  mode "0755"
   variables()
 end
+
+#template "/etc/dovecot/conf.d/auth-master.conf" do
+#  source "auth-master.conf.erb"
+#  owner "root"
+#  group "root"
+#  mode "0777"
+#  variables()
+#end

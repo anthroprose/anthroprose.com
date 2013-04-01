@@ -37,6 +37,7 @@
 		"dovecot-imapd",
 		"dovecot-mysql",
 		"aspell",
+		"memcached"
 		"build-essential",
 		"libxslt1.1",
 		"libxslt1-dev",
@@ -91,8 +92,8 @@
 		"default_domain" : "anthroprose.com",
 		"default_site_enabled" : false,
 		"sites" : [
-			{ "domain":"mail.anthroprose.com", "uwsgi_port":"2100", "directory":"/opt/horde" },
-			{ "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
+		    { "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
+			{ "domain":"mail.anthroprose.com", "https":"true", "uwsgi_port":"2100", "directory":"/opt/horde" },
 			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" }
 		]
 	},
