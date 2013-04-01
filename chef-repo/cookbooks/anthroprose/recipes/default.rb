@@ -274,7 +274,7 @@ Array(node['nginx']['sites']).each do |u|
     group "root"
     cwd "/etc/nginx/ssl/"
     code <<-EOH
-      openssl req -new -x509 -nodes -out /etc/nginx/ssl/#{u[:domain]}.crt -keyout /etc/nginx/ssl/#{u[:domain]}.key -subj \"/C=US/ST=TX/L=Austin/O=#{u[:domain]}/OU=#{u[:domain]}/CN=#{u[:domain]}/emailAddress=webmaster@#{u[:domain]}\"
+      openssl req -new -x509 -nodes -out /etc/nginx/ssl/#{u[:domain]}.crt -keyout /etc/nginx/ssl/#{u[:domain]}.key -subj \"/C=#{node[:nginx][:ssl][:country]}/ST=#{node[:nginx][:ssl][:state]}/L=#{node[:nginx][:ssl][:city]}/O=#{u[:domain]}/OU=#{u[:domain]}/CN=#{u[:domain]}/emailAddress=webmaster@#{u[:domain]}\"
     EOH
   end
 

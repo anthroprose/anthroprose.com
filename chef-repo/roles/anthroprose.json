@@ -10,12 +10,13 @@
 		"recipe[git]",
 		"recipe[chef-solo-search]",
 		"recipe[user::data_bag]",
+		"recipe[sudo]",
 		"recipe[nginx]",
 		"recipe[mysql::server]",
+		"recipe[openvpn]",
+        "recipe[openvpn::users]",
  		"recipe[anthroprose]",
  		"recipe[diaspora]",
- 		"recipe[openvpn]",
-		"recipe[openvpn::users]",
 		"recipe[postfix::server]"
 	],
   	"region" : "us-east-1",
@@ -91,6 +92,11 @@
 	"nginx" : {
 		"default_domain" : "anthroprose.com",
 		"default_site_enabled" : false,
+        "ssl" : {
+            "city" : "Austin",
+            "state" : "TX",
+            "country" : "US"
+        },
 		"sites" : [
 		    { "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
 			{ "domain":"mail.anthroprose.com", "https":"true", "uwsgi_port":"2100", "directory":"/opt/horde" },
@@ -131,7 +137,8 @@
 	   "enable_registrations" : "false",
 	   "require_ssl" : "false",
 	   "city" : "Austin",
-	   "state" : "TX"
+	   "state" : "TX",
+	   "country" : "US"
 	}
 }
 

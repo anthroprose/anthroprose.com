@@ -113,7 +113,7 @@ if node['diaspora']['proxy_https'] == 'true' then
     group "root"
     cwd "/etc/nginx/ssl/"
     code <<-EOH
-      openssl req -new -x509 -nodes -out /etc/nginx/ssl/#{node[:diaspora][:domain]}.crt -keyout /etc/nginx/ssl/#{node[:diaspora][:domain]}.key -subj \"/C=US/ST=#{node[:diaspora][:state]}/L=#{node[:diaspora][:city]}/O=#{node[:diaspora][:domain]}/OU=#{node[:diaspora][:domain]}/CN=#{node[:diaspora][:domain]}/emailAddress=#{node[:diaspora][:admin_email]}\"
+      openssl req -new -x509 -nodes -out /etc/nginx/ssl/#{node[:diaspora][:domain]}.crt -keyout /etc/nginx/ssl/#{node[:diaspora][:domain]}.key -subj \"/C=#{node[:diaspora][:country]}/ST=#{node[:diaspora][:state]}/L=#{node[:diaspora][:city]}/O=#{node[:diaspora][:domain]}/OU=#{node[:diaspora][:domain]}/CN=#{node[:diaspora][:domain]}/emailAddress=#{node[:diaspora][:admin_email]}\"
     EOH
   end
   
