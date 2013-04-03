@@ -24,6 +24,7 @@ script "create_databases" do
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['tinytinyrss']['db']['database']}"
+    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['roundcube']['db']['database']}"
   EOH
 end
 
@@ -225,6 +226,15 @@ cron "tty-rss" do
   minute "30"
   command "cd #{node['tinytinyrss']['dir']} && /usr/bin/php #{node['tinytinyrss']['dir']}/update.php -feeds >/dev/null 2>&1"  
 end
+
+remote_file "#{Chef::Config[:file_cache_path]}/roundcube.tgz" do
+  source "http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.8.6/roundcubemail-0.8.6.tar.gz"
+  mode "0644"
+end
+
+
+
+########################## NGINX
 
 directory "/etc/nginx/ssl/" do
   owner "root"

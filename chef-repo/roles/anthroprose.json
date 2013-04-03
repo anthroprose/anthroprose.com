@@ -50,6 +50,8 @@
 		"libcurl4-openssl-dev",
 		"imagemagick",
 		"libmagickwand-dev",
+		"php5-imagick",
+		"php5-memcache",
 		"git-core",
 		"redis-server",
 		"libffi-dev",
@@ -100,7 +102,8 @@
 		"sites" : [
 		    { "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
 			{ "domain":"mail.anthroprose.com", "https":"true", "uwsgi_port":"2100", "directory":"/opt/horde" },
-			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" }
+			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" },
+			{ "domain":"roundcube.anthroprose.com", "https":"true", "uwsgi_port":"2103", "directory":"/opt/roundcube" }
 		]
 	},
 	"horde" : {
@@ -127,6 +130,13 @@
             "database" : "tinytinyrss"
         }
 	},
+	"roundcube" : {
+        "dir" :"/opt/roundcube",
+        "domain" : "https://mail.anthroprose.com",
+        "db" : {
+            "database" : "roundcubemail"
+        }
+    },
 	"diaspora" : {
 	   "dir" : "/opt/diaspora",
 	   "pod_name" : "anthroprose",
