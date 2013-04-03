@@ -1,6 +1,7 @@
 {
 	"name": "anthroprose",
 	"hostname":"anthroprose.com",
+	"timezone":"CST",
 	"description": "The base role for Anthroprose.com",
 	"instance_role": "anthroprose",
 	"run_list": [

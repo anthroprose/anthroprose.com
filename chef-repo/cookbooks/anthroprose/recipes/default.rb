@@ -251,6 +251,15 @@ end
 
 ########################## NGINX
 
+template "/etc/php5/cgi/php.ini" do
+  source "php.ini.erb"
+  owner "root"
+  group "root"
+  mode "0655"
+  variables()
+  notifies :restart, "service[uwsgi]", :immediately
+end
+
 directory "/etc/nginx/ssl/" do
   owner "root"
   group "root"
