@@ -227,12 +227,27 @@ cron "tty-rss" do
   command "cd #{node['tinytinyrss']['dir']} && /usr/bin/php #{node['tinytinyrss']['dir']}/update.php -feeds >/dev/null 2>&1"  
 end
 
+
+############################### RoundCube
+
+directory "#{node['roundcube']['dir']}" do
+  owner "root"
+  group "root"
+  mode "0777"
+  action :create
+  recursive true
+end
+
 remote_file "#{Chef::Config[:file_cache_path]}/roundcube.tgz" do
   source "http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.8.6/roundcubemail-0.8.6.tar.gz"
   mode "0644"
 end
 
-
+execute "untar-roundcube" do
+  cwd node['roundcube']['dir']
+  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/roundcube.tgz"
+  creates "#{node['roundcube']['dir']}/index.php"
+end
 
 ########################## NGINX
 
