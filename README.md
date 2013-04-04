@@ -33,7 +33,7 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 # Highlights
 
 * OpenVPN via UDP 54 (DNSMASQ for Coffee Shops and other places) (vpn.athroprose.com)
-* Horde Webmail + IMAP (https://mail.anthroprose.com)
+* Roundcube + IMAP (https://mail.anthroprose.com)
 * Wordpress (http://www.anthroprose.com)
 * TinyTinyRSS (https://reader.anthroprose.com)
 * Diaspora (https://me.anthroprose.com)
