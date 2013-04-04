@@ -29,69 +29,69 @@ script "create_databases" do
 end
 
 ############### Horde
-
-hc = php_pear_channel "pear.horde.org" do
-   action :discover
-end
-
-directory "#{node['horde']['directory']}" do
-  owner "www-data"
-  group "www-data"
-  mode "0775"
-  action :create
-  recursive true
-end
-
-script "pear_horde_role" do
-  interpreter "bash"
-  timeout 3600
-  user "root"
-  group "root"
-  code <<-EOH
-	pear install horde/horde_role
-	echo "#{node['horde']['directory']}"|pear run-scripts horde/Horde_Role
-  EOH
-end
-
-php_pear "webmail" do
-   channel hc.channel_name
-   preferred_state "stable"
-   action :install
-end
-
-service "uwsgi" do
-  supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
-end
-
-execute "setup-horde-db" do
-  command "/usr/bin/horde-db-migrate;touch #{node['horde']['directory']}/db.log"
-  creates "#{node['horde']['directory']}/db.log"
-end
-
-template "#{node['horde']['directory']}/config/conf.php" do
-  source "conf.php.erb"
-  owner "www-data"
-  group "www-data"
-  mode "0775"
-  variables()
-end
-
-Array(['kronolith','mnemo','nag','turba', 'ingo']).each do |c|
-  
-  template "#{node['horde']['directory']}/#{c}/config/conf.php" do
-    source "#{c}-conf.php.erb"
-    owner "www-data"
-    group "www-data"
-    mode "0775"
-    variables()
-  end
-  
-end
-
-execute "touch_logs" do
-  command "chown -R www-data:www-data #{node['horde']['directory']};chmod -R g+rw #{node['horde']['directory']}"
-end
+#
+#hc = php_pear_channel "pear.horde.org" do
+#   action :discover
+#end
+#
+#directory "#{node['horde']['directory']}" do
+#  owner "www-data"
+#  group "www-data"
+#  mode "0775"
+#  action :create
+#  recursive true
+#end
+#
+#script "pear_horde_role" do
+#  interpreter "bash"
+#  timeout 3600
+#  user "root"
+#  group "root"
+#  code <<-EOH
+#	pear install horde/horde_role
+#	echo "#{node['horde']['directory']}"|pear run-scripts horde/Horde_Role
+#  EOH
+#end
+#
+#php_pear "webmail" do
+#   channel hc.channel_name
+#   preferred_state "stable"
+#   action :install
+#end
+#
+#service "uwsgi" do
+#  supports :status => true, :restart => true, :reload => true
+#  action [ :enable, :start ]
+#end
+#
+#execute "setup-horde-db" do
+#  command "/usr/bin/horde-db-migrate;touch #{node['horde']['directory']}/db.log"
+#  creates "#{node['horde']['directory']}/db.log"
+#end
+#
+#template "#{node['horde']['directory']}/config/conf.php" do
+#  source "conf.php.erb"
+#  owner "www-data"
+#  group "www-data"
+#  mode "0775"
+#  variables()
+#end
+#
+#Array(['kronolith','mnemo','nag','turba', 'ingo']).each do |c|
+#  
+#  template "#{node['horde']['directory']}/#{c}/config/conf.php" do
+#    source "#{c}-conf.php.erb"
+#    owner "www-data"
+#    group "www-data"
+#    mode "0775"
+#    variables()
+#  end
+#  
+#end
+#
+#execute "touch_logs" do
+#  command "chown -R www-data:www-data #{node['horde']['directory']};chmod -R g+rw #{node['horde']['directory']}"
+#end
 
 ################# Wordpress
 require 'digest/sha1'
@@ -244,6 +244,8 @@ remote_file "#{Chef::Config[:file_cache_path]}/roundcube.tgz" do
 end
 
 execute "untar-roundcube" do
+  owner "www-data"
+  group "www-data"
   cwd node['roundcube']['dir']
   command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/roundcube.tgz"
   creates "#{node['roundcube']['dir']}/index.php"
