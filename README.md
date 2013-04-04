@@ -59,7 +59,7 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 * ImageMagick
 
 ----------------------------------------
-# Possible Additions
+### Possible Additions
 
 * Seafile (http://seafile.com / https://github.com/haiwen/seafile/wiki)
 * Varnish (https://www.varnish-cache.org/)
@@ -67,3 +67,7 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 * TentD (https://tent.io/)
 * Git Server
 * EncFS
+* MongoDB (not sure if I want to feed the troll)
+* JavaScript framework collections jQuery/Bootstrap/d3/backbone.js/etc... (serve these from static.domain.com)?
+* Log Search/Aggregation/Visualizations (Kibana/Logstash/Elasticsearch)??
+* Cloud monitoring agents (Boundary, ServerDensity, etc..)
