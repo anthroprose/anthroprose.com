@@ -244,8 +244,6 @@ remote_file "#{Chef::Config[:file_cache_path]}/roundcube.tgz" do
 end
 
 execute "untar-roundcube" do
-  owner "www-data"
-  group "www-data"
   cwd node['roundcube']['dir']
   command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/roundcube.tgz"
   creates "#{node['roundcube']['dir']}/index.php"
