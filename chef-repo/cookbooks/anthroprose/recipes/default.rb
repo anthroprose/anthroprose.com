@@ -231,9 +231,9 @@ end
 ############################### RoundCube
 
 directory "#{node['roundcube']['dir']}" do
-  owner "root"
-  group "root"
-  mode "0777"
+  owner "www-data"
+  group "www-data"
+  mode "0775"
   action :create
   recursive true
 end
@@ -247,6 +247,22 @@ execute "untar-roundcube" do
   cwd node['roundcube']['dir']
   command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/roundcube.tgz"
   creates "#{node['roundcube']['dir']}/index.php"
+end
+
+template "#{node['roundcube']['dir']}/config/main.inc.php" do
+  source "main.inc.php.erb"
+  owner "www-data"
+  group "www-data"
+  mode "0775"
+  variables()
+end
+
+template "#{node['roundcube']['dir']}/config/db.inc.php" do
+  source "db.inc.php.erb"
+  owner "www-data"
+  group "www-data"
+  mode "0775"
+  variables()
 end
 
 ########################## NGINX
