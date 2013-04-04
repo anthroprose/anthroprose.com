@@ -41,10 +41,29 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 ----------------------------------------
 
 ## Packages
+
 * Chef
+* OpenVPN
 * NginX
 * MySQL
+* Redis
+* MemcacheD
 * PHP
+* UWSGI
 * Python
 * Ruby
+* Postfix
 * Dovecot
+* Git
+* Node.JS
+* ImageMagick
+
+----------------------------------------
+# Possible Additions
+
+* Seafile (http://seafile.com / https://github.com/haiwen/seafile/wiki)
+* Varnish (https://www.varnish-cache.org/)
+* Tor (https://www.torproject.org/)
+* TentD (https://tent.io/)
+* Git Server
+* EncFS
