@@ -16,6 +16,8 @@
 # options. The paths listed here are for configure --prefix=/usr
 # --sysconfdir=/etc --localstatedir=/var
 
+mail_location = mbox:~/mail:INBOX=/var/mail/%u
+
 # Enable installed protocols
 !include_try /usr/share/dovecot/protocols.d/*.protocol
 
