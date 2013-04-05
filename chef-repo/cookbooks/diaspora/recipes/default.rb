@@ -15,13 +15,13 @@ gem_package('bundler') do
   :install
 end
 
-directory "#{node['diaspora']['dir']}" do
-  owner "diaspora"
-  group "www-data"
-  mode "0775"
-  action :create
-  recursive true
-end
+#directory "#{node['diaspora']['dir']}" do
+#  owner "diaspora"
+#  group "www-data"
+#  mode "0775"
+#  action :create
+#  recursive true
+#end
 
 git "#{node['diaspora']['dir']}" do
   repository "git://github.com/diaspora/diaspora.git"
