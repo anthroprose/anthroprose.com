@@ -38,6 +38,7 @@ script "install_diaspora" do
   group "root"
   cwd "#{node['diaspora']['dir']}"
   code <<-EOH
+    gem install bundler
     bundle install
   EOH
 end
