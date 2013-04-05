@@ -273,7 +273,6 @@ template "/etc/php5/cgi/php.ini" do
   group "root"
   mode "0655"
   variables()
-  notifies :restart, "service[uwsgi]", :immediately
 end
 
 directory "/etc/nginx/ssl/" do

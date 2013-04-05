@@ -5,3 +5,4 @@ sudo gem install chef --no-ri --no-rdoc
 git clone https://github.com/anthroprose/anthroprose.com.git ./anthroprose
 cd anthroprose
 echo "Please create a file at ./chef-repo/data_bags/anthroprose/config.json"
+echo "Please create a file at ./chef-repo/data_bags/diaspora/config.json"
