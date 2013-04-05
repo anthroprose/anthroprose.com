@@ -331,13 +331,13 @@ Array(node['nginx']['sites']).each do |u|
 end
 
 ####################### Dovecot
-template "/etc/dovecot/dovecot-sql.conf" do
-  source "dovecot-sql.conf.erb"
-  owner "root"
-  group "root"
-  mode "0755"
-  variables()
-end
+#template "/etc/dovecot/dovecot-sql.conf" do
+#  source "dovecot-sql.conf.erb"
+#  owner "root"
+#  group "root"
+#  mode "0755"
+#  variables()
+#end
 
 template "/etc/dovecot/dovecot.conf" do
   source "dovecot.conf.erb"
@@ -362,3 +362,16 @@ end
 #  mode "0777"
 #  variables()
 #end
+
+############################# IPV6
+template "/etc/network/interfaces" do
+  source "interfaces.erb"
+  owner "root"
+  group "root"
+  mode "0755"
+  variables()
+end
+
+execute "ipv6-ifup" do
+  command "/sbin/ifup he-ipv6"
+end

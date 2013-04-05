@@ -71,3 +71,7 @@ Create a file for: ~/anthroprose/chef-repo/data_bags/anthroprose/config.json
 * JavaScript framework collections jQuery/Bootstrap/d3/backbone.js/etc... (serve these from static.domain.com)?
 * Log Search/Aggregation/Visualizations (Kibana/Logstash/Elasticsearch)??
 * Cloud monitoring agents (Boundary, ServerDensity, etc..)
+* XMPP Server
+* Python Package Server
+
+

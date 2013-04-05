@@ -150,6 +150,11 @@
 	   "city" : "Austin",
 	   "state" : "TX",
 	   "country" : "US"
+	},
+	"ipv6" : {
+	   "server_ipv4address" : "209.51.181.2",
+	   "client_ipv6address" : "2001:470:1f10:8e2::2",
+	   "ipv6address" : "2001:470:1f11:8e2::1"
 	}
 }
 
