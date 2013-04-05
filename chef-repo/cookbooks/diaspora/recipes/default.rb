@@ -7,6 +7,7 @@ user_account 'diaspora' do
   comment       'diaspora'
   home          node[:diaspora][:dir]
   manage_home   false
+  ssh_keygen    false
   gid           %x[id -g www-data].to_i
 end
 
