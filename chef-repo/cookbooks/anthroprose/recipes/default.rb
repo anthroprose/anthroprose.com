@@ -1,3 +1,8 @@
+execute "hostname" do
+  command "echo #{node['nginx']['default_domain']} >> /etc/hostname;host -F /etc/hostname"
+  creates "#{node['tinytinyrss']['dir']}/db.log"
+end
+
 Array(node['dependencies']).each do |p|
   package p do
     action :install
