@@ -9,14 +9,14 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet dhcp
 iface eth0 inet6 static
-  address <% node['ipv6']['ipv6address'] %>
+  address <%= node['ipv6']['ipv6address'] %>
   netmask 64
   
 auto he-ipv6
 iface he-ipv6 inet6 v4tunnel
-  address <% node['ipv6']['client_ipv6address'] %>
+  address <%= node['ipv6']['client_ipv6address'] %>
   netmask 64
-  endpoint <% node['ipv6']['server_ipv4address'] %>
-  local <% node['ip_address'] %>
+  endpoint <%= node['ipv6']['server_ipv4address'] %>
+  local <%= node['ip_address'] %>
   up ip -6 route add default dev he-ipv6
   down ip -6 route del default dev he-ipv6
