@@ -296,7 +296,6 @@ Array(node['nginx']['sites']).each do |u|
   		:port => u['uwsgi_port'],
   		:directory => u['directory']
   	  )
-      notifies :restart, "service[uwsgi]"
   	end
 	end
 	
