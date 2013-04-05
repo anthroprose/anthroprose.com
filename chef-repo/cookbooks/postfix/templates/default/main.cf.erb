@@ -3,6 +3,7 @@
 # Configured as <%= node['postfix']['mail_type'] %>
 ###
 
+inet_protocols = all
 biff = no
 append_dot_mydomain = no
 smtpd_use_tls = <%= node['postfix']['smtpd_use_tls'] %>
@@ -22,6 +23,7 @@ smtp_use_tls = <%= node['postfix']['smtp_use_tls'] %>
 myhostname = <%= node['postfix']['myhostname'] %>
 <% if node['postfix']['domain'] %>
 mydomain = <%= node['postfix']['mydomain'] %>
+relay_domains = <%= node['postfix']['mydomain'] %>
 <% end -%>
 myorigin = <%= node['postfix']['myorigin'] %>
 smtpd_banner = $myhostname ESMTP $mail_name
