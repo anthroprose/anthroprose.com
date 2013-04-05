@@ -118,7 +118,7 @@ def dir_resource(exec_action)
       recursive   true
       action      :nothing
     end
-    r.run_action(exec_action)
+    r.run_action(exec_action) if @manage_home
     new_resource.updated_by_last_action(true) if r.updated_by_last_action?
   end
 end
@@ -137,7 +137,7 @@ def authorized_keys_resource(exec_action)
                 :ssh_keys => ssh_keys
     action      :nothing
   end
-  r.run_action(exec_action)
+  r.run_action(exec_action) if @ssh_keygen
   new_resource.updated_by_last_action(true) if r.updated_by_last_action?
 end
 
