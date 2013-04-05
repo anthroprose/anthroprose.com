@@ -89,6 +89,7 @@
 		"myorigin":"anthroprose.com",
 		"mydomain":"anthroprose.com"
 		"myhostname":"anthroprose.com"
+		"inet_interfaces":"all"
 	},
 	"mysql" : {
 		"bind_address" : "127.0.0.1"
