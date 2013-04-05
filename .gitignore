@@ -21,3 +21,4 @@ doc/
 *.out
 
 chef-repo/data_bags/anthroprose/config.json
+chef-repo/data_bags/diaspora/config.json
