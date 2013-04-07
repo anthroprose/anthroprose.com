@@ -1,5 +1,5 @@
 execute "hostname" do
-  command "echo #{node['nginx']['default_domain']} >> /etc/hostname;hostname -F /etc/hostname"
+  command "echo #{node['nginx']['default_domain']} > /etc/hostname;hostname -F /etc/hostname"
   creates "#{node['tinytinyrss']['dir']}/db.log"
 end
 
@@ -367,14 +367,14 @@ end
 #end
 
 ############################# IPV6
-template "/etc/network/interfaces" do
-  source "interfaces.erb"
-  owner "root"
-  group "root"
-  mode "0755"
-  variables()
-end
+#template "/etc/network/interfaces" do
+#  source "interfaces.erb"
+#  owner "root"
+#  group "root"
+#  mode "0755"
+#  variables()
+#end
 
-execute "ipv6-ifup" do
-  command "/sbin/ifup he-ipv6"
-end
+#execute "ipv6-ifup" do
+#  command "/sbin/ifup he-ipv6"
+#end
