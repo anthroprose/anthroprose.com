@@ -1,0 +1,328 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description" : "anthroprose.com",
+    "Parameters" : {
+    
+        "KeyName" : {
+              "Default" : "anthroprose",
+              "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+              "Type" : "String",
+              "MinLength": "1",
+              "MaxLength": "64",
+              "AllowedPattern" : "[-_ a-zA-Z0-9]*",
+              "ConstraintDescription" : "can contain only alphanumeric characters, spaces, dashes and underscores."
+        },
+        
+        "InstanceClass" : {
+            "Default" : "t1.micro",
+            "Type" : "String",
+            "Description" : "Instance Class",
+            "AllowedValues" : [ "t1.micro", "m1.small", "m1.large", "m1.xlarge" ],
+            "ConstraintDescription" : "must select a instance type."
+        },
+        
+        "DBPassword" : {
+              "Description" : "Root Password for Database",
+              "Type" : "String",
+              "MinLength": "1",
+              "MaxLength": "64"
+        },
+        
+        "Hostname" : {
+              "Description" : "Hostname for this Instance",
+              "Type" : "String",
+              "MinLength": "1"
+        }
+        
+    },
+
+    "Mappings" : {
+        "AWSInstanceType2Arch" : {
+          "t1.micro"    : { "Arch" : "64" },
+          "m1.small"    : { "Arch" : "64" },
+          "m1.medium"   : { "Arch" : "64" },
+          "m1.large"    : { "Arch" : "64" },
+          "m1.xlarge"   : { "Arch" : "64" },
+          "m2.xlarge"   : { "Arch" : "64" },
+          "m2.2xlarge"  : { "Arch" : "64" },
+          "m2.4xlarge"  : { "Arch" : "64" },
+          "c1.medium"   : { "Arch" : "64" },
+          "c1.xlarge"   : { "Arch" : "64" }
+        },
+
+        "AWSRegionArch2AMINAT" : {
+          "us-east-1"      : { "64" : "ami-962f4bff" },
+          "us-west-1"      : { "64" : "ami-a44e62e1" },
+          "us-west-2"      : { "64" : "ami-52ff7262" },
+          "eu-west-1"      : { "64" : "ami-e5e2d991" },
+          "sa-east-1"      : { "64" : "ami-0039e61d" },
+          "ap-southeast-1" : { "64" : "ami-02eb9350" },
+          "ap-northeast-1" : { "64" : "ami-14d86d15" }
+        }
+        
+    },
+
+    "Resources" : {
+
+        "VPC" : {
+          "Type" : "AWS::EC2::VPC",
+          "Properties" : {
+            "CidrBlock" : "10.0.0.0/17",
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Public" }
+            ]
+          }
+        },
+    
+        "PublicSubnet" : {
+          "Type" : "AWS::EC2::Subnet",
+          "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.0.0/27",
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Public" }
+            ]
+          }
+        },
+
+        "InternetGateway" : {
+          "Type" : "AWS::EC2::InternetGateway",
+          "Properties" : {
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Public" }
+            ]
+          }
+        },
+    
+        "AttachGateway" : {
+          "Type" : "AWS::EC2::VPCGatewayAttachment",
+          "Properties" : {
+             "VpcId" : { "Ref" : "VPC" },
+             "InternetGatewayId" : { "Ref" : "InternetGateway" }
+          }
+        },
+    
+        "PublicRouteTable" : {
+          "Type" : "AWS::EC2::RouteTable",
+          "Properties" : {
+            "VpcId" : {"Ref" : "VPC"},
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Public" }
+            ]
+          }
+        },
+
+        "PublicRoute" : {
+          "Type" : "AWS::EC2::Route",
+          "Properties" : {
+            "RouteTableId" : { "Ref" : "PublicRouteTable" },
+            "DestinationCidrBlock" : "0.0.0.0/0",
+            "GatewayId" : { "Ref" : "InternetGateway" }
+          }
+        },
+    
+        "PublicSubnetRouteTableAssociation" : {
+          "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+          "Properties" : {
+            "SubnetId" : { "Ref" : "PublicSubnet" },
+            "RouteTableId" : { "Ref" : "PublicRouteTable" }
+          }
+        },
+
+        "PrivateSubnet" : {
+          "Type" : "AWS::EC2::Subnet",
+          "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.0.32/27",
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Private" }
+            ]
+          }
+        },
+        
+        "PrivateRouteTable" : {
+          "Type" : "AWS::EC2::RouteTable",
+          "Properties" : {
+            "VpcId" : {"Ref" : "VPC"},
+            "Tags" : [
+              {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} },
+              {"Key" : "Network", "Value" : "Private" }
+            ]
+          }
+        },
+        
+        "PrivateRoute" : {
+          "Type" : "AWS::EC2::Route",
+          "Properties" : {
+            "RouteTableId" : { "Ref" : "PrivateRouteTable" },
+            "DestinationCidrBlock" : "0.0.0.0/0",
+            "GatewayId" : { "Ref" : "InternetGateway" }
+          }
+        },
+        
+        "PrivateSubnetRouteTableAssociation" : {
+          "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+          "Properties" : {
+            "SubnetId" : { "Ref" : "PrivateSubnet" },
+            "RouteTableId" : { "Ref" : "PrivateRouteTable" }
+          }
+        },
+
+        "NATPolicy": {
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+                "Roles": [{"Ref": "NATRole"}],
+                "PolicyName": "NATPolicy",
+                "PolicyDocument": { 
+                    "Statement":[
+                        {
+                            "Effect":"Allow",
+                            "Action":"cloudformation:DescribeStackResource",
+                            "Resource":"*"
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "ec2:Describe*",
+                            "ec2:CreateSnapshot",
+                            "ec2:CreateTags"
+                          ],
+                          "Resource": "*"
+                        }
+                    ]
+                }
+            }
+            
+        },
+
+       "NATRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {"Service": ["ec2.amazonaws.com"]},
+                        "Action": ["sts:AssumeRole"]
+                    }]},
+                "Path": "/"
+            }
+        },
+
+        "CFNUser" : {
+            "Type" : "AWS::IAM::User",
+            "Properties" : {
+                "Path": "/",
+                "Policies": [{
+                    "PolicyName": "root",
+                    "PolicyDocument": { "Statement":[{
+                        "Effect":"Allow",
+                        "Action":"cloudformation:DescribeStackResource",
+                        "Resource":"*"
+                        }]}
+                }]
+            }
+        },
+        
+        "NATProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [{ "Ref": "NATRole" }]}
+        },
+
+        "HostKeys" : {
+          "Type" : "AWS::IAM::AccessKey",
+          "Properties" : {
+            "UserName" : {"Ref": "CFNUser"}
+          }
+        },
+    
+        "NATIPAddress" : {
+          "Type" : "AWS::EC2::EIP",
+          "Properties" : {
+            "Domain" : "vpc",
+            "InstanceId" : { "Ref" : "NATDevice" }
+          }
+        },
+
+        "NATDevice" : {
+          "Type" : "AWS::EC2::Instance",
+          "Properties" : {
+            "InstanceType" : "t1.micro",
+            "KeyName" : { "Ref" : "KeyName" },
+            "SubnetId" : { "Ref" : "PrivateSubnet" },
+            "SourceDestCheck" : "false",
+            "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMINAT", { "Ref" : "AWS::Region" }, "64" ]},
+            "SecurityGroupIds" : [{ "Ref" : "NATSecurityGroup" }],
+                "UserData": {
+                    "Fn::Base64" : { "Fn::Join" : ["", [
+                          "#!/bin/bash -v\n",
+                          "apt-get update\n",
+                          "apt-get -y install git ruby1.9.1 ruby1.9.1-dev build-essential\n",
+                          "gem install chef --no-ri --no-rdoc\n",
+                          "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
+                          "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
+                          "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
+                          "(\ncat << 'EOP'\n{\"id\":\"config\",\"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
+                          "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
+                          "chmod +x /home/ubuntu/anthroprose/deploy.sh\n",
+                          "cd /home/ubuntu/anthroprose/\n",
+                          "./deploy.sh\n"
+                          ]]
+                    }
+                }            
+          }
+        },
+
+        "NATSecurityGroup" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "Enable internal access to the NAT device",
+            "VpcId" : { "Ref" : "VPC" },
+            "SecurityGroupIngress" : [
+              { "IpProtocol" : "tcp", "FromPort" : "22",  "ToPort" : "22",  "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "tcp", "FromPort" : "25",  "ToPort" : "25",  "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "tcp", "FromPort" : "443",  "ToPort" : "443",  "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "tcp", "FromPort" : "993",  "ToPort" : "993",  "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "tcp", "FromPort" : "3000",  "ToPort" : "3000",  "CidrIp" : "0.0.0.0/0" }
+            ],
+            "SecurityGroupEgress" : [
+              { "IpProtocol" : "tcp", "FromPort" : "0", "ToPort" : "65535", "CidrIp" : "0.0.0.0/0" },
+              { "IpProtocol" : "udp", "FromPort" : "0", "ToPort" : "65535", "CidrIp" : "0.0.0.0/0" } ,
+              { "IpProtocol" : "icmp", "FromPort" : "-1",  "ToPort" : "-1",  "CidrIp" : "0.0.0.0/0" }
+            ]
+          }
+        }
+        
+    },
+
+    "Outputs" : {
+    
+        "VpcId" : {
+          "Value" : {"Ref" : "VPC"},
+          "Description" : "VPC ID of newly created VPC"
+        },
+    
+        "PublicSubnetID" :  {
+          "Value" : {"Ref" : "PublicSubnet"},
+          "Description" : "Public subnet ID"
+        },
+    
+        "PrivateSubnetID" : {
+          "Value" : {"Ref": "PrivateSubnet"},
+          "Description" : "Private Subnet ID"
+        },
+        
+        "DBPassword" : {
+          "Value" : {"Ref": "DBPassword"},
+          "Description" : "DB Password"
+        }
+    }
+    
+}
