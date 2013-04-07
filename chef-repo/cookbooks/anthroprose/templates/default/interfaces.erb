@@ -8,7 +8,10 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
-iface eth0 inet6 static
+
+auto eth1
+iface eth1 inet dhcp
+iface eth1 inet6 static
   address <%= node['ipv6']['ipv6address'] %>
   netmask 64
   

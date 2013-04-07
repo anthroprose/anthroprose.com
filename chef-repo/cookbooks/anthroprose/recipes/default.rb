@@ -27,7 +27,7 @@ script "create_databases" do
   group "root"
   code <<-EOH
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
-    /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
+    #/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['tinytinyrss']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['roundcube']['db']['database']}"
   EOH
@@ -288,11 +288,6 @@ directory "/etc/nginx/ssl/" do
   recursive true
 end
 
-service "uwsgi" do
-  supports :status => true, :restart => true, :reload => true
-  action :enable, :start
-end
-
 Array(node['nginx']['sites']).each do |u|
 
 	Chef::Log.info "Generating site configuration for: " << u['domain']
@@ -338,15 +333,12 @@ Array(node['nginx']['sites']).each do |u|
 
 end
 
-####################### Dovecot
-#template "/etc/dovecot/dovecot-sql.conf" do
-#  source "dovecot-sql.conf.erb"
-#  owner "root"
-#  group "root"
-#  mode "0755"
-#  variables()
-#end
+service "uwsgi" do
+  supports :status => true, :restart => true, :reload => true
+  action :enable, :start
+end
 
+####################### Dovecot
 template "/etc/dovecot/dovecot.conf" do
   source "dovecot.conf.erb"
   owner "root"
