@@ -288,6 +288,11 @@ directory "/etc/nginx/ssl/" do
   recursive true
 end
 
+service "uwsgi" do
+  supports :status => true, :restart => true, :reload => true
+  action :enable, :start
+end
+
 Array(node['nginx']['sites']).each do |u|
 
 	Chef::Log.info "Generating site configuration for: " << u['domain']
@@ -358,13 +363,6 @@ template "/etc/dovecot/conf.d/10-ssl.conf" do
   variables()
 end
 
-#template "/etc/dovecot/conf.d/auth-master.conf" do
-#  source "auth-master.conf.erb"
-#  owner "root"
-#  group "root"
-#  mode "0777"
-#  variables()
-#end
 
 ############################# IPV6
 #template "/etc/network/interfaces" do
