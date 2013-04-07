@@ -270,9 +270,7 @@
                           "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
                           "(\ncat << 'EOP'\n{\"id\":\"config\",\"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
                           "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
-                          "chmod +x /home/ubuntu/anthroprose/deploy.sh\n",
-                          "cd /home/ubuntu/anthroprose/\n",
-                          "./deploy.sh\n"
+                          "/bin/bash /home/ubuntu/anthroprose/deploy.sh\n"
                           ]]
                     }
                 }            
