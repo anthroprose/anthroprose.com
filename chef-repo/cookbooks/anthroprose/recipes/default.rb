@@ -3,6 +3,16 @@ execute "hostname" do
   creates "#{node['tinytinyrss']['dir']}/db.log"
 end
 
+execute "enable_ip_forwarding" do
+  command "sudo sysctl -w net.ipv4.ip_forward=1"
+end
+
+template "/etc/rc.local" do
+  source "rc.local.erb"
+  owner "root"
+  group "root"
+end
+
 Array(node['dependencies']).each do |p|
   package p do
     action :install
@@ -335,7 +345,7 @@ end
 
 service "uwsgi" do
   supports :status => true, :restart => true, :reload => true
-  action [:enable, :start]
+  action [ :enable, :start ]
 end
 
 ####################### Dovecot
