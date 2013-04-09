@@ -24,6 +24,7 @@ directory "#{node['diaspora']['dir']}" do
 end
 
 git "#{node['diaspora']['dir']}/" do
+  not_if { File.exists?("#{node[:diaspora][:dir]}/config/diaspora.yml") }
   repository "git://github.com/diaspora/diaspora.git"
   branch "master"
   action :sync
