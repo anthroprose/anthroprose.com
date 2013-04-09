@@ -147,6 +147,12 @@
             "database" : "roundcubemail"
         }
     },
+    "owncloud" : {
+        "dir" :"/opt/owncloud",
+        "db" : {
+            "database" : "owncloud"
+        }
+    },
 	"diaspora" : {
 	   "dir" : "/opt/diaspora",
 	   "pod_name" : "anthroprose",
