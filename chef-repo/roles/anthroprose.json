@@ -61,7 +61,14 @@
 		"libreadline5",
 		"openjdk-7-jre",
 		"nodejs",
-		"libncurses5-dev"
+		"libncurses5-dev",
+		"libapr1",
+		"libaprutil1",
+		"libaprutil1-dbd-sqlite3",
+		"libaprutil1-ldap",
+		"php-xml-parser",
+		"php5-gd",
+		"php5-sqlite"
 	],
 	"openvpn" : {
 		"key" : {
@@ -105,7 +112,7 @@
 		    { "domain":"www.anthroprose.com", "uwsgi_port":"2101", "directory":"/opt/wordpress" },
 			{ "domain":"reader.anthroprose.com", "https":"true", "uwsgi_port":"2102", "directory":"/opt/tinytinyrss" },
 			{ "domain":"mail.anthroprose.com", "https":"true", "uwsgi_port":"2103", "directory":"/opt/roundcube" },
-			{ "domain":"share.anthroprose.com", "https":"true", "uwsgi_port":"2104", "directory":"/var/www/owncloud" }
+			{ "domain":"share.anthroprose.com", "https":"true", "uwsgi_port":"2104", "directory":"/opt/owncloud" }
 		]
 	},
 	"horde" : {
