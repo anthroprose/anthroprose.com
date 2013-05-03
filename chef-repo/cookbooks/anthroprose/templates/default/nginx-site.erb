@@ -39,6 +39,14 @@ server {
 		try_files $uri @diaspora;
 		
 		location @diaspora {
+<% elsif @directory == "#{node[:owncloud][:dir]}" -%>
+		try_files $uri $uri/ @webdav;
+		
+		location ~ ^/(data|config|\.ht|db_structure\.xml|README) {
+    		deny all;
+		}
+  
+  		location @webdav {
 <% else -%>
         location / {
 <% end -%>

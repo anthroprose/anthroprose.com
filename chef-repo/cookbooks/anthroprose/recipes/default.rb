@@ -27,6 +27,51 @@ php_pear_channel "pear.symfony.com" do
    action :discover
 end
 
+################ EBS Storage Volume
+script "filesystem_format" do
+  only_if { File.exists?("/dev/sdh1") }
+  not_if { File.exists?(node['encfs']['dir']) }
+  interpreter "bash"
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  mkfs.xfs -f /dev/sdh1
+  echo /dev/sdh1 /opt xfs rw,noatime,nodiratime 0 0 >> /etc/fstab
+  EOH
+end
+
+directory node['encfs']['dir'] do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  recursive true
+end
+
+mount node['encfs']['dir'] do
+  only_if { File.exists?("/dev/sdh1") }
+  device "/dev/sdh1"
+  fstype "xfs"
+  action :mount
+end
+
+execute "filesystem_initfs" do
+  creates "/var/log/initfs.touch"
+  command "dracut -H -f /boot/initramfs-$(uname -r).img $(uname -r);touch /var/log/initfs.touch"
+  action :run
+end
+
+script "filesystem_encrypt" do
+  only_if { File.exists?("/dev/sdh1") }
+  not_if { File.exists?(node['encfs']['dir']) }
+  interpreter "bash"
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  mkfs.xfs -f /dev/sdh1
+  echo /dev/sdh1 /opt xfs rw,noatime,nodiratime 0 0 >> /etc/fstab
+  EOH
+end
 
 ############### DBs
 
@@ -324,22 +369,8 @@ Array(node['nginx']['sites']).each do |u|
   		:port => u['uwsgi_port'],
   		:directory => u['directory']
   	  )
+  	  notifies :restart, "service[uwsgi]"
   	end
-	end
-	
-	template "/etc/nginx/sites-enabled/#{u['domain']}.conf" do
-	  source "nginx-site.erb"
-	  owner "root"
-	  group "root"
-	  variables(
-		:uwsgi_port => u['uwsgi_port']||'',
-		:directory => u['directory'],
-		:domain => u['domain'],
-		:proxy => u['proxy']||'false',
-		:https => u['https']||'false',
-		:proxy_location => u['proxy_location']||''
-	  )
-	  notifies :restart, "service[nginx]"
 	end
 	
   script "create-ssl-certs-#{u['domain']}" do
@@ -354,6 +385,21 @@ Array(node['nginx']['sites']).each do |u|
     EOH
   end
 
+  template "/etc/nginx/sites-enabled/#{u['domain']}.conf" do
+    source "nginx-site.erb"
+    owner "root"
+    group "root"
+    variables(
+    :uwsgi_port => u['uwsgi_port']||'',
+    :directory => u['directory'],
+    :domain => u['domain'],
+    :proxy => u['proxy']||'false',
+    :https => u['https']||'false',
+    :proxy_location => u['proxy_location']||''
+    )
+    notifies :restart, "service[nginx]"
+  end
+  
 end
 
 service "uwsgi" do
@@ -391,3 +437,26 @@ end
 #execute "ipv6-ifup" do
 #  command "/sbin/ifup he-ipv6"
 #end
+
+######################## Backups
+script "backup_setup" do
+  creates "/mnt/backup"
+  interpreter "bash"
+  user "root"
+  group "root"
+  cwd "/tmp"
+  code <<-EOH
+    modprobe fuse
+    adduser ubuntu fuse
+    wget --no-check-certificate -P /tmp http://s3fs.googlecode.com/files/s3fs-1.61.tar.gz
+    cd /tmp
+    tar -zxvf s3fs-1.61.tar.gz
+    cd s3fs-1.61
+    ./configure
+    make
+    make install
+    mkdir -p /mnt/backup
+    /usr/local/bin/s3fs anthroprose-backup-#{node['nginx']['default_domain']} /mnt/backup -ouse_cache=/tmp -ouid=`id -u zenoss` -ogid=`id -g zenoss` -oallow_other
+    echo "s3fs#anthroprose-backup-#{node['nginx']['default_domain']} /mnt/backup fuse uid=`id -u zenoss`,gid=`id -g zenoss`,allow_other,use_cache=/tmp 0 0" >> /etc/fstab
+  EOH
+end

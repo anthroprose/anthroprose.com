@@ -68,7 +68,12 @@
 		"libaprutil1-ldap",
 		"php-xml-parser",
 		"php5-gd",
-		"php5-sqlite"
+		"php5-sqlite",
+		"libfuse-dev",
+		"encfs",
+		"fuse-utils",
+		"xfsprogs",
+		"xfsdump"
 	],
 	"openvpn" : {
 		"key" : {
@@ -170,6 +175,9 @@
 	   "server_ipv4address" : "209.51.181.2",
 	   "client_ipv6address" : "2001:470:1f10:8e2::2",
 	   "ipv6address" : "2001:470:1f11:8e2::1"
+	},
+	"encfs" : {
+	   "dir" : "/opt"
 	}
 }
 

@@ -32,7 +32,14 @@
               "Description" : "Hostname for this Instance",
               "Type" : "String",
               "MinLength": "1"
-        }
+        },
+        
+        "VolumeSize" : {
+            "Default" : "10",
+            "Type" : "String",
+            "Description" : "Size of Storage Volume as Int - Gigabytes",
+            "AllowedPattern" : "[0-9]*",
+        },
         
     },
 
@@ -193,7 +200,15 @@
                             "ec2:CreateTags"
                           ],
                           "Resource": "*"
-                        }
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": "s3:*",
+                            "Resource": [
+                                { "Fn::Join" : ["", ["arn:aws:s3:::anthroprose-backup-", { "Ref" : "StackName" } ]]},
+                                { "Fn::Join" : ["", ["arn:aws:s3:::anthroprose-backup-", { "Ref" : "StackName" }, "/*" ]]}
+                            ]
+                        },
                     ]
                 }
             }
@@ -251,30 +266,36 @@
         },
 
         "NATDevice" : {
-          "Type" : "AWS::EC2::Instance",
-          "Properties" : {
-            "InstanceType" : "t1.micro",
-            "KeyName" : { "Ref" : "KeyName" },
-            "SubnetId" : { "Ref" : "PrivateSubnet" },
-            "SourceDestCheck" : "false",
-            "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMINAT", { "Ref" : "AWS::Region" }, "64" ]},
-            "SecurityGroupIds" : [{ "Ref" : "NATSecurityGroup" }],
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+                "InstanceType" : "t1.micro",
+                "KeyName" : { "Ref" : "KeyName" },
+                "SubnetId" : { "Ref" : "PrivateSubnet" },
+                "SourceDestCheck" : "false",
+                "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMINAT", { "Ref" : "AWS::Region" }, "64" ]},
+                "SecurityGroupIds" : [{ "Ref" : "NATSecurityGroup" }],
+                "BlockDeviceMappings" : [ {
+                    "DeviceName" : "/dev/sdh1",
+                    "Ebs" : {"VolumeSize" : { "Ref" : "VolumeSize" }}
+                }],
                 "UserData": {
-                    "Fn::Base64" : { "Fn::Join" : ["", [
-                          "#!/bin/bash -v\n",
-                          "apt-get update\n",
-                          "apt-get -y install git ruby1.9.1 ruby1.9.1-dev build-essential\n",
-                          "gem install chef --no-ri --no-rdoc\n",
-                          "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
-                          "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
-                          "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
-                          "(\ncat << 'EOP'\n{\"id\":\"config\",\"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
-                          "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
-                          "/bin/bash /home/ubuntu/anthroprose/deploy.sh\n"
-                          ]]
+                    "Fn::Base64" : { 
+                        "Fn::Join" : ["", [
+                            "#!/bin/bash -v\n",
+                            "apt-get update\n",
+                            "apt-get -y install cloud-init git ruby1.9.1 ruby1.9.1-dev build-essential\n",
+                            "service cloud-init start\n", 
+                            "gem install chef --no-ri --no-rdoc\n",
+                            "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
+                            "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
+                            "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
+                            "(\ncat << 'EOP'\n{\"id\":\"config\",\"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
+                            "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
+                            "/bin/bash /home/ubuntu/anthroprose/deploy.sh\n"
+                        ] ]
                     }
                 }            
-          }
+            }
         },
 
         "NATSecurityGroup" : {
