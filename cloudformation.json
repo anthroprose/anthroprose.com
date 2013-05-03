@@ -38,8 +38,8 @@
             "Default" : "10",
             "Type" : "String",
             "Description" : "Size of Storage Volume as Int - Gigabytes",
-            "AllowedPattern" : "[0-9]*",
-        },
+            "AllowedPattern" : "[0-9]*"
+        }
         
     },
 
@@ -180,6 +180,20 @@
           }
         },
 
+        "S3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "Private",
+                "DeletionPolicy" : "Retain",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Backup Bucket for anthroprose.com",
+                    }
+                ]
+            }
+        },
+        
         "NATPolicy": {
             "Type" : "AWS::IAM::Policy",
             "Properties" : {
@@ -205,16 +219,16 @@
                             "Effect": "Allow",
                             "Action": "s3:*",
                             "Resource": [
-                                { "Fn::Join" : ["", ["arn:aws:s3:::anthroprose-backup-", { "Ref" : "StackName" } ]]},
-                                { "Fn::Join" : ["", ["arn:aws:s3:::anthroprose-backup-", { "Ref" : "StackName" }, "/*" ]]}
+                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3Bucket" } ]]},
+                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3Bucket" }, "/*" ]]}
                             ]
-                        },
+                        }
                     ]
                 }
             }
             
         },
-
+        
        "NATRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -289,7 +303,7 @@
                             "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
                             "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
                             "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
-                            "(\ncat << 'EOP'\n{\"id\":\"config\",\"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
+                            "(\ncat << 'EOP'\n{\"id\":\"config\", \"s3bucket\" : \"", { "Ref" : "S3Bucket" }, "\", \"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
                             "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
                             "/bin/bash /home/ubuntu/anthroprose/deploy.sh\n"
                         ] ]

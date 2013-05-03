@@ -456,7 +456,7 @@ script "backup_setup" do
     make
     make install
     mkdir -p /mnt/backup
-    /usr/local/bin/s3fs anthroprose-backup-#{node['nginx']['default_domain']} /mnt/backup -ouse_cache=/tmp -ouid=`id -u zenoss` -ogid=`id -g zenoss` -oallow_other
-    echo "s3fs#anthroprose-backup-#{node['nginx']['default_domain']} /mnt/backup fuse uid=`id -u zenoss`,gid=`id -g zenoss`,allow_other,use_cache=/tmp 0 0" >> /etc/fstab
+    /usr/local/bin/s3fs anthroprose-backup-#{node['s3bucket']} /mnt/backup -ouse_cache=/tmp -ouid=`id -u ubuntu` -ogid=`id -g ubuntu` -oallow_other
+    echo "s3fs#anthroprose-backup-#{node['s3bucket']} /mnt/backup fuse uid=`id -u ubuntu`,gid=`id -g ubuntu`,allow_other,use_cache=/tmp 0 0" >> /etc/fstab
   EOH
 end
