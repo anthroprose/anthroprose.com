@@ -53,18 +53,6 @@ execute "filesystem_initfs" do
   action :run
 end
 
-script "filesystem_encrypt" do
-  only_if { File.exists?("/dev/sdh1") }
-  not_if { File.exists?(node['encfs']['dir']) }
-  interpreter "bash"
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-  mkfs.xfs -f /dev/sdh1
-  echo /dev/sdh1 /opt xfs rw,noatime,nodiratime 0 0 >> /etc/fstab
-  EOH
-end
-
 ############### DBs
 
 script "create_databases" do
@@ -74,7 +62,6 @@ script "create_databases" do
   group "root"
   code <<-EOH
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['wordpress']['db']['database']}"
-    #/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['horde']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['tinytinyrss']['db']['database']}"
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['roundcube']['db']['database']}"
   EOH
@@ -375,15 +362,15 @@ script "backup_setup" do
   code <<-EOH
     modprobe fuse
     adduser ubuntu fuse
-    wget --no-check-certificate -P /tmp http://s3fs.googlecode.com/files/s3fs-1.61.tar.gz
+    wget --no-check-certificate -P /tmp http://s3fs.googlecode.com/files/s3fs-1.71.tar.gz
     cd /tmp
-    tar -zxvf s3fs-1.61.tar.gz
-    cd s3fs-1.61
+    tar -zxvf s3fs-1.71.tar.gz
+    cd s3fs-1.71
     ./configure
     make
     make install
     mkdir -p /mnt/backup
-    /usr/local/bin/s3fs anthroprose-backup-#{node['s3bucket']} /mnt/backup -ouse_cache=/tmp -ouid=`id -u ubuntu` -ogid=`id -g ubuntu` -oallow_other
-    echo "s3fs#anthroprose-backup-#{node['s3bucket']} /mnt/backup fuse uid=`id -u ubuntu`,gid=`id -g ubuntu`,allow_other,use_cache=/tmp 0 0" >> /etc/fstab
+    /usr/local/bin/s3fs #{node['s3bucket']} /mnt/backup -ouse_cache=/tmp -ouid=`id -u ubuntu` -ogid=`id -g ubuntu` -oallow_other
+    echo "s3fs##{node['s3bucket']} /mnt/backup fuse uid=`id -u ubuntu`,gid=`id -g ubuntu`,allow_other,use_cache=/tmp 0 0" >> /etc/fstab
   EOH
 end
