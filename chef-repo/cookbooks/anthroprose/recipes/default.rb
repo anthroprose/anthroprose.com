@@ -241,24 +241,7 @@ end
 
 ########################## OwnCloud
 
-directory "#{node['owncloud']['dir']}" do
-  owner "www-data"
-  group "www-data"
-  mode "0775"
-  action :create
-  recursive true
-end
 
-remote_file "#{Chef::Config[:file_cache_path]}/owncloud.bz2" do
-  source "http://download.owncloud.org/community/owncloud-5.0.3.tar.bz2"
-  mode "0644"
-end
-
-execute "untar-owncloud" do
-  cwd node['owncloud']['dir']
-  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/owncloud.bz2"
-  creates "#{node['owncloud']['dir']}/index.php"
-end
 
 ########################## NGINX
 
