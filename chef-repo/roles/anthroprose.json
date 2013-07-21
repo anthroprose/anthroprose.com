@@ -120,13 +120,6 @@
 			{ "domain":"share.anthroprose.com", "https":"true", "uwsgi_port":"2104", "directory":"/opt/owncloud" }
 		]
 	},
-	"horde" : {
-		"directory" : "/opt/horde",
-		"db" : {
-			"database" : "horde"
-		},
-		"admin_user" : "acorley"
-	},
 	"wordpress" : {
 		"dir" : "/opt/wordpress",
 		"db" : {
@@ -177,7 +170,7 @@
 	   "ipv6address" : "2001:470:1f11:8e2::1"
 	},
 	"encfs" : {
-	   "dir" : "/opt"
+	   "dir" : "/opt/encfs"
 	}
 }
 

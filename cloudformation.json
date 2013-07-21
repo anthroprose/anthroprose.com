@@ -44,19 +44,7 @@
     },
 
     "Mappings" : {
-        "AWSInstanceType2Arch" : {
-          "t1.micro"    : { "Arch" : "64" },
-          "m1.small"    : { "Arch" : "64" },
-          "m1.medium"   : { "Arch" : "64" },
-          "m1.large"    : { "Arch" : "64" },
-          "m1.xlarge"   : { "Arch" : "64" },
-          "m2.xlarge"   : { "Arch" : "64" },
-          "m2.2xlarge"  : { "Arch" : "64" },
-          "m2.4xlarge"  : { "Arch" : "64" },
-          "c1.medium"   : { "Arch" : "64" },
-          "c1.xlarge"   : { "Arch" : "64" }
-        },
-
+    
         "AWSRegionArch2AMINAT" : {
           "us-east-1"      : { "64" : "ami-962f4bff" },
           "us-west-1"      : { "64" : "ami-a44e62e1" },
@@ -85,6 +73,7 @@
         "PublicSubnet" : {
           "Type" : "AWS::EC2::Subnet",
           "Properties" : {
+            "AvailabilityZone" : "us-east-1d",
             "VpcId" : { "Ref" : "VPC" },
             "CidrBlock" : "10.0.0.0/27",
             "Tags" : [
@@ -143,6 +132,7 @@
         "PrivateSubnet" : {
           "Type" : "AWS::EC2::Subnet",
           "Properties" : {
+            "AvailabilityZone" : "us-east-1d",
             "VpcId" : { "Ref" : "VPC" },
             "CidrBlock" : "10.0.0.32/27",
             "Tags" : [
@@ -180,15 +170,15 @@
           }
         },
 
-        "S3Bucket": {
+        "Backup": {
             "Type": "AWS::S3::Bucket",
+            "DeletionPolicy" : "Retain",
             "Properties": {
                 "AccessControl": "Private",
-                "DeletionPolicy" : "Retain",
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "Backup Bucket for anthroprose.com",
+                        "Value": { "Fn::Join" : ["", ["Backup Bucket for ", { "Ref" : "Hostname" } ]]}
                     }
                 ]
             }
@@ -219,8 +209,8 @@
                             "Effect": "Allow",
                             "Action": "s3:*",
                             "Resource": [
-                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3Bucket" } ]]},
-                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "S3Bucket" }, "/*" ]]}
+                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "Backup" } ]]},
+                                { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "Backup" }, "/*" ]]}
                             ]
                         }
                     ]
@@ -241,21 +231,6 @@
                 "Path": "/"
             }
         },
-
-        "CFNUser" : {
-            "Type" : "AWS::IAM::User",
-            "Properties" : {
-                "Path": "/",
-                "Policies": [{
-                    "PolicyName": "root",
-                    "PolicyDocument": { "Statement":[{
-                        "Effect":"Allow",
-                        "Action":"cloudformation:DescribeStackResource",
-                        "Resource":"*"
-                        }]}
-                }]
-            }
-        },
         
         "NATProfile": {
             "Type": "AWS::IAM::InstanceProfile",
@@ -264,13 +239,6 @@
                 "Roles": [{ "Ref": "NATRole" }]}
         },
 
-        "HostKeys" : {
-          "Type" : "AWS::IAM::AccessKey",
-          "Properties" : {
-            "UserName" : {"Ref": "CFNUser"}
-          }
-        },
-    
         "NATIPAddress" : {
           "Type" : "AWS::EC2::EIP",
           "Properties" : {
@@ -286,8 +254,9 @@
                 "KeyName" : { "Ref" : "KeyName" },
                 "SubnetId" : { "Ref" : "PrivateSubnet" },
                 "SourceDestCheck" : "false",
-                "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMINAT", { "Ref" : "AWS::Region" }, "64" ]},
+                "ImageId" : "ami-10314d79",
                 "SecurityGroupIds" : [{ "Ref" : "NATSecurityGroup" }],
+                "IamInstanceProfile" : {"Fn::GetAtt" : ["NATProfile", "Arn"] },
                 "BlockDeviceMappings" : [ {
                     "DeviceName" : "/dev/sdh1",
                     "Ebs" : {"VolumeSize" : { "Ref" : "VolumeSize" }}
@@ -297,13 +266,14 @@
                         "Fn::Join" : ["", [
                             "#!/bin/bash -v\n",
                             "apt-get update\n",
-                            "apt-get -y install cloud-init git ruby1.9.1 ruby1.9.1-dev build-essential\n",
-                            "service cloud-init start\n", 
-                            "gem install chef --no-ri --no-rdoc\n",
+                            "apt-get -y install python-setuptools git ruby1.9.1 ruby1.9.1-dev build-essential\n",
+                            "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n", 
+                            "cfn-init -v -s ", { "Ref" : "AWS::StackName" }, " -r NATProfile --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
+                            "curl -L http://www.opscode.com/chef/install.sh | bash\n",
                             "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
                             "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
                             "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora\n",
-                            "(\ncat << 'EOP'\n{\"id\":\"config\", \"s3bucket\" : \"", { "Ref" : "S3Bucket" }, "\", \"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
+                            "(\ncat << 'EOP'\n{\"id\":\"config\", \"s3bucket\" : \"", { "Ref" : "Backup" }, "\", \"mysql_root_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_db_password\":\"", { "Ref" : "DBPassword" } ,"\",\"wordpress_keys_hash\":\"", { "Ref" : "DBPassword" } ,"\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose/config.json\n",
                             "(\ncat << 'EOP'\n{\"id\":\"config\"}\nEOP\n) > /home/ubuntu/anthroprose/chef-repo/data_bags/diaspora/config.json\n",
                             "/bin/bash /home/ubuntu/anthroprose/deploy.sh\n"
                         ] ]
@@ -352,10 +322,26 @@
           "Description" : "Private Subnet ID"
         },
         
-        "DBPassword" : {
-          "Value" : {"Ref": "DBPassword"},
-          "Description" : "DB Password"
+        "NATSecurityGroupID" : {
+          "Value" : {"Ref": "NATSecurityGroup"},
+          "Description" : "NAT Security Group ID"
+        },
+        
+        "NATIPAddress" : {
+          "Value" : {"Ref": "NATIPAddress"},
+          "Description" : "Public IP Address"
+        },
+        
+        "S3Bucket" : {
+          "Value" : {"Ref": "Backup"},
+          "Description" : "Backup S3 Bucket"
+        },
+        
+        "Hostname" : {
+          "Value" : {"Ref": "Hostname"},
+          "Description" : "Default Hostname of Instance"
         }
+        
     }
     
 }

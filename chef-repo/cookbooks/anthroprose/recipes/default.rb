@@ -19,14 +19,6 @@ Array(node['dependencies']).each do |p|
   end
 end
 
-php_pear_channel "pear.phpunit.de" do
-   action :discover
-end
-
-php_pear_channel "pear.symfony.com" do
-   action :discover
-end
-
 ################ EBS Storage Volume
 script "filesystem_format" do
   only_if { File.exists?("/dev/sdh1") }
@@ -87,71 +79,6 @@ script "create_databases" do
     /usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" -e "CREATE DATABASE IF NOT EXISTS #{node['roundcube']['db']['database']}"
   EOH
 end
-
-############### Horde
-#
-#hc = php_pear_channel "pear.horde.org" do
-#   action :discover
-#end
-#
-#directory "#{node['horde']['directory']}" do
-#  owner "www-data"
-#  group "www-data"
-#  mode "0775"
-#  action :create
-#  recursive true
-#end
-#
-#script "pear_horde_role" do
-#  interpreter "bash"
-#  timeout 3600
-#  user "root"
-#  group "root"
-#  code <<-EOH
-#	pear install horde/horde_role
-#	echo "#{node['horde']['directory']}"|pear run-scripts horde/Horde_Role
-#  EOH
-#end
-#
-#php_pear "webmail" do
-#   channel hc.channel_name
-#   preferred_state "stable"
-#   action :install
-#end
-#
-#service "uwsgi" do
-#  supports :status => true, :restart => true, :reload => true
-#  action [ :enable, :start ]
-#end
-#
-#execute "setup-horde-db" do
-#  command "/usr/bin/horde-db-migrate;touch #{node['horde']['directory']}/db.log"
-#  creates "#{node['horde']['directory']}/db.log"
-#end
-#
-#template "#{node['horde']['directory']}/config/conf.php" do
-#  source "conf.php.erb"
-#  owner "www-data"
-#  group "www-data"
-#  mode "0775"
-#  variables()
-#end
-#
-#Array(['kronolith','mnemo','nag','turba', 'ingo']).each do |c|
-#  
-#  template "#{node['horde']['directory']}/#{c}/config/conf.php" do
-#    source "#{c}-conf.php.erb"
-#    owner "www-data"
-#    group "www-data"
-#    mode "0775"
-#    variables()
-#  end
-#  
-#end
-#
-#execute "touch_logs" do
-#  command "chown -R www-data:www-data #{node['horde']['directory']};chmod -R g+rw #{node['horde']['directory']}"
-#end
 
 ################# Wordpress
 require 'digest/sha1'
