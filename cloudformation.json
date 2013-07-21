@@ -183,6 +183,27 @@
                 ]
             }
         },
+
+        "NATRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {"Service": ["ec2.amazonaws.com"]},
+                        "Action": ["sts:AssumeRole"]
+                    }]},
+                "Path": "/"
+            }
+        },
+
+        "NATProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [{"Ref": "NATRole"}]
+            }
+        },
         
         "NATPolicy": {
             "Type" : "AWS::IAM::Policy",
@@ -218,26 +239,6 @@
             }
             
         },
-        
-       "NATRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {"Service": ["ec2.amazonaws.com"]},
-                        "Action": ["sts:AssumeRole"]
-                    }]},
-                "Path": "/"
-            }
-        },
-        
-        "NATProfile": {
-            "Type": "AWS::IAM::InstanceProfile",
-            "Properties": {
-                "Path": "/",
-                "Roles": [{ "Ref": "NATRole" }]}
-        },
 
         "NATIPAddress" : {
           "Type" : "AWS::EC2::EIP",
@@ -256,7 +257,7 @@
                 "SourceDestCheck" : "false",
                 "ImageId" : "ami-10314d79",
                 "SecurityGroupIds" : [{ "Ref" : "NATSecurityGroup" }],
-                "IamInstanceProfile" : {"Fn::GetAtt" : ["NATProfile", "Arn"] },
+                "IamInstanceProfile" : "arn:aws:iam::503617296526:instance-profile/anthroprose",
                 "BlockDeviceMappings" : [ {
                     "DeviceName" : "/dev/sdh1",
                     "Ebs" : {"VolumeSize" : { "Ref" : "VolumeSize" }}
@@ -268,7 +269,7 @@
                             "apt-get update\n",
                             "apt-get -y install python-setuptools git ruby1.9.1 ruby1.9.1-dev build-essential\n",
                             "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n", 
-                            "cfn-init -v -s ", { "Ref" : "AWS::StackName" }, " -r NATProfile --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
+                            "cfn-init -v -s ", { "Ref" : "AWS::StackName" }, " -r NATDevice --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
                             "curl -L http://www.opscode.com/chef/install.sh | bash\n",
                             "git clone https://github.com/anthroprose/anthroprose.com.git /home/ubuntu/anthroprose\n",
                             "mkdir -p /home/ubuntu/anthroprose/chef-repo/data_bags/anthroprose\n",
