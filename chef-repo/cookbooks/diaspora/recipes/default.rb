@@ -11,10 +11,6 @@ user_account 'diaspora' do
   gid           %x[id -g www-data].to_i
 end
 
-gem_package('bundler') do
-  :install
-end
-
 directory "#{node['diaspora']['dir']}" do
   owner "diaspora"
   group "www-data"
