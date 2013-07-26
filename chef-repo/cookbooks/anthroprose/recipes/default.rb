@@ -250,7 +250,7 @@ directory "#{node['owncloud']['dir']}" do
 end
 
 remote_file "#{Chef::Config[:file_cache_path]}/owncloud.bz2" do
-  source "http://download.owncloud.org/community/owncloud-5.0.3.tar.bz2"
+  source "http://download.owncloud.org/community/owncloud-5.0.9.tar.bz2"
   mode "0644"
 end
 

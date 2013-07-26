@@ -1,6 +1,6 @@
 <% if @https == 'true' -%>
 server {
-	listen       [::]:80;
+	listen       80;
 	server_name  <%= @domain %>;
 	location / {
 		rewrite ^(.*) https://<%= @domain %>$1 permanent;
@@ -10,13 +10,13 @@ server {
 server {
 
 <% if @https == 'true' -%>
-        listen [::]:443;
+        listen 443;
 
         ssl                     on;
         ssl_certificate         /etc/nginx/ssl/<%= @domain %>.crt;
         ssl_certificate_key     /etc/nginx/ssl/<%= @domain %>.key;
 <% else -%>
-		listen [::]:80;
+		listen 80;
 <% end -%>
 
         server_name <%= @domain %>;
@@ -40,6 +40,13 @@ server {
 		
 		location @diaspora {
 <% elsif @directory == "#{node[:owncloud][:dir]}" -%>
+
+		location ~ ^/remote.php(/.*)$ {
+                include uwsgi_params;
+                uwsgi_pass 127.0.0.1:2104;
+                uwsgi_modifier1 9;
+        }
+
 		try_files $uri $uri/ @webdav;
 		
 		location ~ ^/(data|config|\.ht|db_structure\.xml|README) {
